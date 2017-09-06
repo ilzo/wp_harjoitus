@@ -1,0 +1,474 @@
+/*
+Theme Name: MovieDB
+Theme URI: -
+Author: Ilari Juvani
+Author URI: -
+Description:  Just a small theme I made as a school project.
+Version: 1.0
+Text Domain: moviedb
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+*/
+
+* { 
+    margin: 0;
+}
+
+html {
+    position: relative;
+    overflow-y: scroll;
+    overflow-x: hidden;   
+}
+
+body {
+    position: relative;
+    padding: 0; 
+    margin: 0;
+    background-color: rgb(18, 23, 63) !important;
+    /*
+    background-repeat-x: no-repeat;
+    background-repeat-y: no-repeat;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    */
+}
+
+.page-wrapper {
+    width: 80%;
+    margin: auto;
+}
+
+.bg-img {
+    position: absolute;
+    top: 1em;
+    right: 5%;
+}
+
+#header-home, #header-single {
+    position: relative;
+    width: 100%;
+    height: 400px; 
+    background-color: transparent;
+}
+
+#header-home {
+    height: 400px; 
+}
+
+#header-single {
+    height: 320px; 
+}
+
+#header-logo-container {
+    position: absolute;
+    bottom: 40px;
+}
+
+#header-single #header-logo-container {
+    width: 300px;
+}
+
+#header-single .custom-logo {
+    width: 100%;
+    height: auto;
+}
+
+.home-section, .review-list-item {
+    position: relative;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.48);
+}
+
+#latest-reviews, #latest-news, .review-list-item { 
+    border: 1px solid rgb(253, 61, 7);
+    
+}
+
+#content #latest-reviews .review-link, #review-list-wrapper .review-list-item {
+    -webkit-transition: all 0.25s ease-out 0s;
+    -moz-transition: all 0.25s ease-out 0s;
+    -ms-transition: all 0.25s ease-out 0s;
+    -o-transition: all 0.25s ease-out 0s;
+    transition: all 0.25s ease-out 0s;
+}
+
+
+#latest-reviews .review-link:hover {
+    color: aqua;
+}
+
+#latest-reviews .review-link:hover, #review-list-wrapper .review-list-item:hover {
+    border-color: aqua;
+}
+
+
+#latest-reviews {
+    min-height: 800px;
+    padding: 4em;
+    box-sizing: border-box;
+}
+
+/*
+.review-item {
+    width: 190px;
+    padding: auto;
+    text-align: center;
+    display: inline-flex;
+}
+*/
+
+.review-link.thumbnail {
+    background-color: rgba(34, 0, 36, 0);
+    color: #eefffe;
+}
+
+.review-item img, .review-list-item img {
+    border: 1px solid #eefffe;
+}
+
+
+
+.review-link {
+    width: 200px;
+    text-decoration: none;
+    color: #080808;
+}
+
+
+.review-title {
+    font-size: 10.25pt;
+}
+
+.review-content-wrapper {
+    text-align: center;
+}
+
+
+#latest-news {
+    height: 500px;
+    margin: 4em 0;
+    padding: 4em;
+    box-sizing: border-box;
+}
+
+#social {
+    height: 120px;
+    border: 1px solid rgb(253, 61, 7);
+    border-radius: 2px 2px 0 0;
+}
+
+.review-list-item {
+    margin-bottom: 3.75em;
+}
+
+
+.review-list-item .review-content-wrapper {
+    text-align: left;
+    color: #eefffe;
+    /*
+    display: inline-block;
+    margin: 1em 0 0 10em;
+    width: 70%;
+    height: 100%;
+    */
+}
+
+
+
+/*
+.review-list-item .panel {
+    height: 380px;
+}
+
+
+.review-list-item .thumbnail {
+    height: 100%;
+    padding: 1.25em;
+}
+*/
+
+.review-list-item .review-link > .row {
+    padding: 1.25em;
+}
+
+.review-list-item .thumbnail img {
+    margin: 0;
+    max-height: 100%;
+    width: auto;
+    float: left;
+}
+
+.review-list-item .review-title {
+    font-size: 1.9em;
+}
+
+.review-list-item-header {
+    margin: 2em 0;
+    border-bottom: 1px solid #eefffe;
+}
+
+.review-list-item-header span {
+    margin-right: 10px;
+    top: 2px;
+}
+
+.review-list-item-content {
+    margin: 3em 0;
+}
+
+/*
+.review-list-item-footer {
+    position: absolute;
+    bottom: 25px;
+}
+*/
+
+.single .content-area {
+    position: relative;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.48);
+}
+
+.single-review-header {
+    margin: 0 -4px 2em -4px !important;
+    padding: 1.8em;
+    border: 1px solid #eefffe;  
+    border-radius: 10px;
+    background-color: rgba(26, 13, 26, 0.7);
+    color: #eefffe;
+}
+
+/*
+.single-mdb_review #single-review-title {
+  
+}
+*/
+
+.single-mdb_review #single-review-rating {
+    padding-top: 5px;
+    text-align: right;
+}
+
+#single-review-rating .rating-title span {
+    top: 2px;
+    right: 5px;
+}
+
+.single #primary {
+    padding: 3.5em 2.5em 3.5em 2.5em;
+    border: 1px solid rgb(253, 61, 7);
+    border-radius: 2px;
+}
+
+/*
+.cover-image-container {
+    width: 300px;
+}
+*/
+
+.cover-image-container img {
+    width: 100%;
+    height: auto;
+    border: 1px solid #eefffe;
+}
+
+.movie-specs-container .panel {
+    background-color: rgba(26, 13, 26, 0.7);
+    border: 1px solid #ffc330;
+    color: #eefffe;
+}
+
+#movie-specs {
+    border-color: #ffc330;
+}
+
+#movie-specs tr td:first-child {
+    border-right: 1px solid #ffc330;
+}
+
+.movie-specs-container .panel .panel-heading {
+    padding: 10px 8px;
+}
+
+
+
+#movie-specs>tbody>tr>td, #movie-specs>tbody>tr>th, #movie-specs>tfoot>tr>td, #movie-specs>tfoot>tr>th, #movie-specs>thead>tr>td, #movie-specs>thead>tr>th {
+    
+    border-top: 1px solid #ffc330;
+}
+
+#mdb-gallery {
+    background-color: rgba(4, 8, 36, 0.75);
+    padding: 1.75em 0 1.75em 0;
+    margin: 2em 0 2em 0 !important;
+    border: 1px solid #eefffe;
+}
+
+.gallery-item .thumbnail {
+    border: 1px solid #eefffe;
+    padding: 0;
+    border-radius: 0;
+}
+
+.review-list-item .thumbnail { 
+    border: 0;
+    padding: 0;
+    border-radius: 0;
+    background-color: #eefffe;
+}
+    
+.review-list-item .thumbnail {
+    margin: 0;
+    max-width: 340px;
+}
+
+.review-author {
+    text-align: center;
+    margin: 0 0 2.5em 0;
+}
+
+#commentform label {
+    display: block;
+}
+
+#single-review-content {
+    margin-top: 2em;
+    padding: 0.8em;
+    background-color: rgba(255, 0, 239, 0.2);
+    color: #eefffe;
+    border: 1px solid #eefffe;
+}
+
+.single-review-footer {
+    padding: 0.6em 5em 1em 5em;
+    background-color: rgba(11, 38, 70, 0.65);
+    border: 1px solid #eefffe;
+    color: #eefffe;
+}
+
+.single #single-comments {
+    padding: 4em;
+    border: 1px solid rgb(253, 61, 7);
+    border-bottom: 0;
+    border-radius: 2px 2px 0 0;
+    margin-top: 2em;
+}
+
+.single #review-summary-container {
+    padding: 1.8em;
+    background-color: rgba(72, 22, 71, 0.72);
+    color: #eefffe;
+    border: 1px solid #eefffe;
+}
+
+#review-summary-container .glsr-bar-background::before {
+    background: rgba(0, 0, 0, 0.35);
+}
+
+.glsr-review.panel-primary {
+    border: 1px solid rgb(253, 61, 7);
+    background-color: rgba(29, 247, 255, 0.44);
+    color: #eefffe;
+}
+
+.glsr-review-excerpt.panel {
+    background-color: rgba(5, 51, 46, 0.69);
+}
+
+.glsr-review.panel-primary > .panel-heading {
+    color: #eefffe;
+    background-color: rgba(84, 11, 52, 0.9);
+    border-color: rgba(84, 11, 52, 0.9);
+}
+
+.glsr-review-excerpt {
+    margin: 2em 0.8em;
+    padding: 0.8em 1.2em;
+}
+
+.glsr-review-avatar { 
+    margin-left: 13px !important;
+}
+
+.glsr-review-author span {
+    font-weight: bold;
+    font-style: italic;
+}
+
+.glsr-field input[type="text"], .glsr-field textarea {
+    width: 35em;
+    font-size: 13pt;
+    padding: 5px 7px;
+    background-color: rgba(0, 0, 0, 0.35);
+    border: 1px solid #eefffe;
+}
+
+.glsr-field input[type="text"] {
+    height: 40px;
+}
+
+.glsr-field textarea {
+    max-width: 35em;
+    height: 225px;
+    max-height: 225px;
+}
+
+.glsr-field .btn {
+    background-color: #29b586;
+    border: 1px solid #eefffe;
+    padding: 0.75em 2.5em;
+    color: #ffffff;
+    -webkit-transition: all 0.18s ease-out 0s;
+    -moz-transition: all 0.18s ease-out 0s;
+    -ms-transition: all 0.18s ease-out 0s;
+    -o-transition: all 0.18s ease-out 0s;
+    transition: all 0.18s ease-out 0s;
+}
+
+.glsr-field .btn:hover {
+    border-color: aqua;
+    color: aqua;
+    /* background-color: black; */
+    background-color: #150529;
+}
+
+.glsr-submit-review-form {
+    color: #eefffe;
+    background-color: rgba(72, 22, 71, 0.72);
+    border: 1px solid #eefffe;
+    padding: 2em;
+    max-width: 760px;
+}
+
+#footer {
+    width: 100%;
+    height: 300px;
+    background-color: #4b0113;
+    border-left: 1px solid rgb(253, 61, 7);
+    border-right: 1px solid rgb(253, 61, 7);
+}
+
+
+
+/* -------- Responsiviness -------- */
+
+
+@media screen and (max-width: 768px) { 
+    .review-link {
+        width: 100%;
+    }
+    
+    .review-link img {
+        width: 80%;
+    }
+    
+    .review-list-item .thumbnail {
+        margin: auto;
+    }
+
+
+}
+
+
