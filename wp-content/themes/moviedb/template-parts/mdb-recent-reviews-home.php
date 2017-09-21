@@ -1,4 +1,3 @@
-<div id="reviews-wrapper" class="container-fluid">
 <div class="row">
 <?php $i = 0; $j = 1; $reviews_length = count($reviews);
 foreach($reviews as $review):
@@ -9,7 +8,7 @@ if(is_object($review)):
         <?php echo get_the_post_thumbnail( $review->id, 'cover-thumb' ); ?>
         <div class="review-content-wrapper">
             <div class="review-content">
-                <h3 class="review-title"><?php echo $review->title ?></h3>
+                <h4 class="review-title"><?php echo $review->title ?></h4>
                 <div class="review-published">
                     <p><?php echo $review->published ?></p>
                 </div>
@@ -23,4 +22,3 @@ if(is_object($review)):
 <?php elseif($reviews_length - $i === 1): ?>    
 </div>   
 <?php endif; $i++; $j++; endforeach; ?>        
-</div>

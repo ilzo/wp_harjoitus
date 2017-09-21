@@ -102,6 +102,7 @@ function mdb_review_init() {
         'query_var' => true,
         'capability_type' => 'post',
         'hierarchical' => false,
+        'has_archive' => true,
         'menu_icon' => 'dashicons-video-alt',
         'supports' => array(
             'title',  
@@ -162,13 +163,24 @@ function mdb_custom_logo() {
 }
 
 
+add_action( 'init', 'mdb_register_navigation_menus' );
+
+function mdb_register_navigation_menus() {
+  register_nav_menu('top-menu', __( 'Top Menu', 'moviedb' ));
+}
+
+
 
 function load_scripts() {
-    wp_register_script('bootstrap-js', get_template_directory_uri() .'/js/bootstrap.min.js', array('jquery'), '3.3.7', false);
+    wp_register_script('bootstrap-js', get_template_directory_uri() .'/js/bootstrap.min.js', array('jquery'), '3.3.7', true);
     
     wp_register_script('simple-lightbox-js', get_template_directory_uri() .'/js/simpleLightbox.min.js', array('jquery'), '1.2.9', false);
     
+    wp_register_script('app-js', get_template_directory_uri() .'/js/app.js', array('jquery', 'bootstrap-js'), '1.0.0', false);
+    
     wp_enqueue_script( 'bootstrap-js' );
+    
+    wp_enqueue_script( 'app-js' );
     
     
     if(is_singular('mdb_review')){
@@ -226,6 +238,40 @@ function mdb_output_custom_header_img_id() {
     
 }
 */
+
+
+
+require_once(get_template_directory() . '/inc/wp-bootstrap-navwalker.php');
+
+function bootstrap_nav() {
+	wp_nav_menu( array(
+            'theme_location'    => 'top-menu',
+            'depth'             => 2,
+            'container'         => 'false',
+            'menu_class'        => 'nav navbar-nav',
+            'walker'            => new wp_bootstrap_navwalker(),
+            'fallback_cb'       => 'wp_bootstrap_navwalker::fallback',
+            'search'            => get_search_form()
+    ));
+}
+
+
+
+
+add_action( 'widgets_init', 'mdb_widgets_init' );
+
+function mdb_widgets_init() {
+    register_sidebar(array(
+        'name' => __( 'Main Sidebar', 'moviedb' ),
+        'id' => 'primary',
+        'description' => __( 'Widgets in this area will be shown on all posts and pages.', 'moviedb' ),
+        'before_widget' => '<div class="widget-container">',
+        'after_widget'  => '</div>',
+        'before_title'  => '<h2 class="widget-title">',
+        'after_title'   => '</h2>',
+    ));
+}
+
 
 
 
@@ -717,6 +763,8 @@ function mdb_strip_content_gallery( $content ) {
 }
 
 
+
+
 /*
 add_filter('the_content', 'strip_gallery');
 
@@ -759,7 +807,28 @@ function  strip_shortcode_gallery( $content ) {
 
 
 
+add_filter('mdb_get_movie_rating', 'mdb_movie_rating_output', 10, 1);
 
+function mdb_movie_rating_output($post_id) {
+    $rating = 0;
+    if(in_array( 'movie_rating', get_post_custom_keys($post_id))) {
+        $rating = get_post_meta( $post_id, 'movie_rating', true);
+    }
+    
+    return $rating;
+}
+
+
+add_filter('mdb_get_movie_summary', 'mdb_movie_summary_output', 10, 1);
+
+function mdb_movie_summary_output($post_id) {
+    $summary = '';
+    if(in_array( 'movie_summary', get_post_custom_keys($post_id))) {
+        $summary = get_post_meta( $post_id, 'movie_summary', true);
+    }
+    
+    return $summary;
+}
 
 
 
@@ -770,7 +839,6 @@ function init_movie_specs_obj($post_id) {
     if(is_singular('mdb_review')) {
         $year = '';
         $director = '';
-        $summary = '';
         $hours = '';
         $mins = '';
         $prequel = '';
@@ -863,9 +931,7 @@ function init_movie_specs_obj($post_id) {
             $sequel = get_post_meta( $post_id, 'movie_sequel', true);
         }
 
-        if(in_array( 'movie_summary', get_post_custom_keys($post_id))) {
-            $summary = get_post_meta( $post_id, 'movie_summary', true);
-        }
+        $summary = apply_filters('mdb_get_movie_summary', $post_id);
         
         $duration['hours'] = $hours;
         $duration['mins'] = $mins;
@@ -876,6 +942,29 @@ function init_movie_specs_obj($post_id) {
 
     return $specs_obj;
 }
+
+add_action( 'pre_get_posts', function( $query ) {
+
+    if( $query->is_main_query() && !is_admin() && $query->is_search() ) {
+
+        // Change the query parameters
+        //$query->set( 'posts_per_page', 3 );
+        $query->set('post_type', 'mdb_review');
+
+    }
+
+} );
+
+/**
+ * Halt the main query in the case of an empty search 
+ */
+add_filter( 'posts_search', function( $search, \WP_Query $q ) {
+    if( ! is_admin() && empty( $search ) && $q->is_search() && $q->is_main_query() )
+        $search .=" AND 0=1 ";
+
+    return $search;
+    
+}, 10, 2 );
 
 
 
@@ -933,6 +1022,64 @@ function mdb_generate_responsive_background_image_styles() {
 }
 */
 
+
+
+function mdb_pagination( $numpages = '', $pagerange = '', $paged = '' ) {
+
+  if (empty($pagerange)) {
+    $pagerange = 2;
+  }
+
+  /**
+   * This first part of our function is a fallback
+   * for custom pagination inside a regular loop that
+   * uses the global $paged and global $wp_query variables.
+   * 
+   * It's good because we can now override default pagination
+   * in our theme, and use this function in default queries
+   * and custom queries.
+   */
+  global $paged;
+  if (empty($paged)) {
+    $paged = 1;
+  }
+  if ($numpages === '') {
+    global $wp_query;
+    $numpages = $wp_query->max_num_pages;
+    if(!$numpages) {
+        $numpages = 1;
+    }
+  }
+
+  $pagination_args = array(
+    'base'            => str_replace( 999999999, '%#%', esc_url( get_pagenum_link( 999999999 ) ) ),
+    'format'          => '/page/%#%',
+    'total'           => $numpages,
+    'current'         => $paged,
+    'show_all'        => false,
+    'end_size'        => 1,
+    'mid_size'        => $pagerange,
+    'prev_next'       => true,
+    'prev_text'       => '<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>',
+    'next_text'       => '<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>',
+    'type'            => 'list',
+    'add_args'        => false,
+    'add_fragment'    => ''
+  );
+
+  $paginate_links = paginate_links($pagination_args);
+    
+  if ($paginate_links) {
+    ?>
+    <div class="pagination">
+        <nav id='mdb-pagination'>
+          <?php echo $paginate_links; ?>
+        </nav>
+    </div>
+    <?php      
+  }
+
+}
 
 
 add_action('mdb_get_comment_form', 'comment_form_output');
@@ -1283,6 +1430,32 @@ function mdb_reviews_home_page_output() {
 
 
 
+/*
+add_action( 'pre_get_posts', 'mdb_post_count_queries' );
+
+function mdb_post_count_queries( $query ) {
+  if (!is_admin() && $query->is_main_query()){
+    if(is_page('reviews')){
+       $query->set('posts_per_page', 1);
+    }
+  }
+}
+*/
+
+add_action('mdb_get_contact_page_content', 'mdb_contact_page_content_output');
+
+function mdb_contact_page_content_output() {
+    if(is_page('contact')) {
+        echo 'Hello world!';
+        
+    }   
+}
+
+
+
+
+/*
+
 add_action('mdb_get_recent_reviews_page', 'mdb_reviews_page_output');
 
 function mdb_reviews_page_output() {
@@ -1305,24 +1478,19 @@ function mdb_reviews_page_output() {
         }
         
         $reviews = array();
+    
+        $paged = ( get_query_var('paged') ) ? get_query_var('paged') : 1;
         
-        $mdb_reviews_query = new WP_Query( array( 'post_type' => 'mdb_review', 'order' => 'DESC', 'posts_per_page'=> 20) );
+        $mdb_reviews_query = new WP_Query( array( 'post_type' => 'mdb_review', 'order' => 'DESC', 'posts_per_page'=> 2, 'paged' => $paged) );
+        
         $mdb_review_posts = $mdb_reviews_query->posts;
         
         $i = 0;
         foreach($mdb_review_posts as $post) { 
-            //$this_review_thumb = esc_url(get_the_post_thumbnail_url($post->ID, 'cover-thumb'));
             
             $post_id = $post->ID;
             $this_review_permalink = esc_url(get_permalink($post));
-            
-            /*
-            $this_review_time = get_the_time( 'U', $post_id );
-            $published = human_time_diff( $this_review_time, current_time('timestamp') ) . ' ago';
-            */
-            
             $published = get_the_date('d.m.Y', $post_id);
-            
             
             $summary = '';
             $rating = 0;
@@ -1350,9 +1518,24 @@ function mdb_reviews_page_output() {
         }
         
         
+    $mdb_reviews_pagination = paginate_links( array(
         
-        //print_r($mdb_review_posts);
+            'base'         => str_replace( 999999999, '%#%', esc_url( get_pagenum_link( 999999999 ) ) ),
+            'format'       => '/page/%#%',
+            'total'        => $mdb_reviews_query->max_num_pages,
+            'current'      => max( 1, $paged ),
+            'show_all'     => false,
+            'type'         => 'plain',
+            'end_size'     => 1,
+            'mid_size'     => 2,
+            'prev_next'    => true,
+            'prev_text'    => sprintf( '<i></i> %1$s', __( 'Newer Posts', 'moviedb' ) ),
+            'next_text'    => sprintf( '%1$s <i></i>', __( 'Older Posts', 'moviedb' ) ),
+            'add_args'     => false,
+            'add_fragment' => '',
+    ) );
         
+    
         ob_start();
         require_once(get_template_directory() . '/template-parts/mdb-recent-reviews-page.php' );
         $output = ob_get_clean();
@@ -1362,17 +1545,4 @@ function mdb_reviews_page_output() {
     }   
 }
 
-
-
-
-add_action('mdb_get_contact_page_content', 'mdb_contact_page_content_output');
-
-function mdb_contact_page_content_output() {
-    if(is_page('contact')) {
-        echo 'Hello world!';
-        
-    }   
-}
-
-
-
+*/

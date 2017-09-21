@@ -16,5 +16,20 @@
     <div id="header-logo-container">
         <?php mdb_custom_logo(); ?>
     </div>
+    <nav id="site-nav" class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <?php bootstrap_nav(); ?>
+            </div>
+        </div>
+    </nav>
 </header> 
 <div id="content" class="site-content">

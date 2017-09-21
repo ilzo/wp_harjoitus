@@ -6,12 +6,9 @@
  * @subpackage moviedb
  *
  */
-
 $post_id = get_the_ID();
 
-if(in_array( 'movie_rating', get_post_custom_keys($post_id))) {
-    $rating = get_post_meta( $post_id, 'movie_rating', true);
-}
+$rating = apply_filters('mdb_get_movie_rating', $post_id);
 
 if(has_post_thumbnail()){
     $thumb_id = get_post_thumbnail_id($post_id);
@@ -19,8 +16,6 @@ if(has_post_thumbnail()){
 }
 
 $specs = apply_filters( 'movie_specs', $post_id);
-
-
 ?>
 <article id="post-<?php echo $post_id ?>" <?php post_class(); ?>>
     <div class="container-fluid">
@@ -85,7 +80,7 @@ $specs = apply_filters( 'movie_specs', $post_id);
             <div class="col-md-12">
                 <footer class="single-review-footer">
                     <h4>Review written by</h4>
-                    <div class="review-author"><h3 class="author-name"><?php the_author_meta('display_name'); ?></h3></div>
+                    <div class="review-author"><h2 class="author-name"><?php the_author_meta('display_name'); ?></h2></div>
                 </footer>
             </div>
         </div>
