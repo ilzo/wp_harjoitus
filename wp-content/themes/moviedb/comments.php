@@ -52,16 +52,16 @@ if ( post_password_required() ) {
     //comment_form();
     ?>
     <div class="row">
-        <div id="review-summary-container" class="panel">
+        <div id="review-summary-container" class="panel single-panel">
             <h3>User rating</h3>
             <?php echo do_shortcode('[site_reviews_summary assigned_to="post_id"]'); ?>
         </div>
     </div>
     
     <div class="row">
-        <div id="review-summary-container" class="panel">
+        <div class="panel single-panel">
             <h3>User reviews</h3>
-            <?php echo do_shortcode('[site_reviews assigned_to="post_id" hide="title"]');  ?>
+            <?php do_action( 'mdb_get_user_reviews', get_the_ID() ); ?>
         </div>
     </div>
     

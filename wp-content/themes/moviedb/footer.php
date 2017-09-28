@@ -1,4 +1,6 @@
 </div>  <!-- END OF SITE CONTENT -->
+<section id="social" class="home-section">
+</section>
 <footer id="footer">
 <div class="footer-container">
 </div> 

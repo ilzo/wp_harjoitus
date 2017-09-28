@@ -30,13 +30,13 @@ $post_id = get_the_ID();
 $rating = apply_filters('mdb_get_movie_rating', $post_id);
 $summary = apply_filters('mdb_get_movie_summary', $post_id);
 ?>
-<figure id="review-<?php echo $post_id ?>" class="review-list-item container-fluid">
+<figure id="review-<?php echo $post_id ?>" class="review-list-item container">
     <a class="review-link" href="<?php the_permalink(); ?>">
     <div class="row">    
     <div class="review-content-wrapper col-xs-12 col-sm-7 col-md-8 col-lg-9">
         <div class="review-list-item-header">
             <h3 class="review-title"><?php the_title(); ?></h3>
-            <h3 class="rating-title"><span class="glyphicon glyphicon-star" aria-hidden="true"></span><?php echo $rating ?> / 5</h3>
+            <h3 class="rating-title"><span class="glyphicon glyphicon-star" aria-hidden="true"></span><?php echo $rating ?><span class="rating-slash">/</span>5</h3>
             <div class="review-published">
                 <p><?php echo get_the_date('d.m.Y', $post_id) ?></p>
             </div>

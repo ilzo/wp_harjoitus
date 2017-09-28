@@ -20,13 +20,13 @@
 
 // ** MySQL settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
-define('DB_NAME', 'your_db_name');
+define('DB_NAME', 'database_name_here');
 
 /** MySQL database username */
-define('DB_USER', 'your_db_username');
+define('DB_USER', 'username_here');
 
 /** MySQL database password */
-define('DB_PASSWORD', 'your_db_password');
+define('DB_PASSWORD', 'password_here');
 
 /** MySQL hostname */
 define('DB_HOST', 'localhost');
@@ -46,14 +46,14 @@ define('DB_COLLATE', '');
  *
  * @since 2.6.0
  */
-define('AUTH_KEY',         '>i}$z&$Z~1sXWl{~)|U}+Q+&UX7*fdYbF2I&nR(GOEcCg}jdk_#V|szG0DUidP~d');
-define('SECURE_AUTH_KEY',  'mY#y09*%rh/jjyWfgv{9BLa%1B`+HLn*Lihms:jZd;tv`x&@u-OD0Z$6%LcxjH-v');
-define('LOGGED_IN_KEY',    '5b!Cocu::@wm^E_<n=qk&!M+7FL*QUq(q++!T ]_nT[$I>~3)fO3On&KSrO-`J~#');
-define('NONCE_KEY',        'O[<]Q6`p&u*>K@oZgd{)O60V+@>U$GQ|3fS>,9nd>:%-QhtBjSau=:OT#]*~+lm[');
-define('AUTH_SALT',        'p||u^=C%VVcf`7s)1LA7|SG.X$%;{M&t;#V~c0#EY!-PB|ERA9:OIq!Fx`w/am6O');
-define('SECURE_AUTH_SALT', '>TgZBp?%aO+D!(0Git}8M.AST;XzS8++z$?#wo(uR40n<B{YzK@+0Y^-On6Mzjxj');
-define('LOGGED_IN_SALT',   'FS5NU,aKm O}~M=Pr0v{o/;L#2iJYl+Q=mm0qxKOpe;=Tgk4I5/T)c.$- K.r5=H');
-define('NONCE_SALT',       'p<Fk}R&(qmSN8P-RX(EmPe4vCqZv0eVms;I9RuH:LD&E@m*o-44w(L1tI9]>+vBH');
+define('AUTH_KEY',         'put your unique phrase here');
+define('SECURE_AUTH_KEY',  'put your unique phrase here');
+define('LOGGED_IN_KEY',    'put your unique phrase here');
+define('NONCE_KEY',        'put your unique phrase here');
+define('AUTH_SALT',        'put your unique phrase here');
+define('SECURE_AUTH_SALT', 'put your unique phrase here');
+define('LOGGED_IN_SALT',   'put your unique phrase here');
+define('NONCE_SALT',       'put your unique phrase here');
 
 /**#@-*/
 
@@ -63,7 +63,7 @@ define('NONCE_SALT',       'p<Fk}R&(qmSN8P-RX(EmPe4vCqZv0eVms;I9RuH:LD&E@m*o-44w
  * You can have multiple installations in one database if you give each
  * a unique prefix. Only numbers, letters, and underscores please!
  */
-$table_prefix  = 'wpshj_';
+$table_prefix  = 'wp_';
 
 /**
  * For developers: WordPress debugging mode.
@@ -77,7 +77,7 @@ $table_prefix  = 'wpshj_';
  *
  * @link https://codex.wordpress.org/Debugging_in_WordPress
  */
-define('WP_DEBUG', true);
+define('WP_DEBUG', false);
 
 /* That's all, stop editing! Happy blogging. */
 

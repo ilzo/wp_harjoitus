@@ -31,5 +31,5 @@
             </div>
         </div>
     </nav>
-</header> 
-<div id="content" class="site-content">
+</header>
+<div id="content" class="site-content has-sidebar container">

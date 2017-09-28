@@ -3,7 +3,7 @@
 foreach($reviews as $review):
 if(is_object($review)):  
 ?>  
-<figure id="review-<?php echo $j ?>" class="review-item col-sm-6 col-md-4 col-lg-3">
+<figure id="review-<?php echo $j ?>" class="review-item col-xs-6 col-sm-6 col-md-4 col-lg-3">
     <a class="review-link thumbnail" href="<?php echo esc_attr($review->url); ?>">
         <?php echo get_the_post_thumbnail( $review->id, 'cover-thumb' ); ?>
         <div class="review-content-wrapper">

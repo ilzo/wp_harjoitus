@@ -183,7 +183,7 @@ function load_scripts() {
     wp_enqueue_script( 'app-js' );
     
     
-    if(is_singular('mdb_review')){
+    if(is_singular('mdb_review') || in_category('news')){
         wp_enqueue_script( 'simple-lightbox-js' );
     }
     
@@ -205,7 +205,7 @@ function load_scripts() {
 function mdb_styles() {
     wp_enqueue_style( 'bootstrap-css', get_stylesheet_directory_uri() . '/css/bootstrap.min.css');
     
-    if(is_singular('mdb_review')){
+    if(is_singular('mdb_review') || in_category('news')){
         wp_enqueue_style( 'simple-lightbox-css', get_stylesheet_directory_uri() . '/css/simpleLightbox.min.css');
     }
 }
@@ -241,7 +241,7 @@ function mdb_output_custom_header_img_id() {
 
 
 
-require_once(get_template_directory() . '/inc/wp-bootstrap-navwalker.php');
+require_once( get_template_directory() . '/inc/wp-bootstrap-navwalker.php' );
 
 function bootstrap_nav() {
 	wp_nav_menu( array(
@@ -260,6 +260,9 @@ function bootstrap_nav() {
 
 add_action( 'widgets_init', 'mdb_widgets_init' );
 
+require_once( get_template_directory() . '/inc/mdb-latest-user-reviews-widget.php' );
+require_once( get_template_directory() . '/inc/mdb-latest-news-widget.php' );
+
 function mdb_widgets_init() {
     register_sidebar(array(
         'name' => __( 'Main Sidebar', 'moviedb' ),
@@ -267,9 +270,12 @@ function mdb_widgets_init() {
         'description' => __( 'Widgets in this area will be shown on all posts and pages.', 'moviedb' ),
         'before_widget' => '<div class="widget-container">',
         'after_widget'  => '</div>',
-        'before_title'  => '<h2 class="widget-title">',
-        'after_title'   => '</h2>',
+        'before_title'  => '<h3 class="widget-title">',
+        'after_title'   => '</h3>',
     ));
+    
+    register_widget('MDB_Latest_User_Reviews_Widget');
+    register_widget('MDB_Latest_News_Widget');
 }
 
 
@@ -540,57 +546,35 @@ function mdb_upload_post_custom_image_sizes($post_id) {
         $cat_name = $wp_term_obj[0]->name;
     }
     
-    //if($type == 'smoy_service' || $cat_name == 'Blogi') {
-    if($type == 'mdb_review') {
-        $thumb_id = get_post_thumbnail_id($post_id);
-        
-        
-        if(!empty($thumb_id)){
-            $thumb_srcset = wp_get_attachment_image_srcset($thumb_id, 'full');
-            $thumb_sizes = explode( ", ", $thumb_srcset );
-            $thumb_srcset_length = count($thumb_sizes);
-            // Call lazy image size function if the image has only full and/or medium-large size uploaded
-            if ($thumb_srcset_length < 3) {
-                
-                //add_image_size( 'cover-thumb', 340, 500, true);
-                /*
-                $args_1 = array(340, 500, true);
-                $args_2 = array(480, 9999, false);
-                $args_3 = array(680, 9999, false);
-                
-                lazy_image_size($thumb_id, $args_1);
-                lazy_image_size($thumb_id, $args_2);
-                lazy_image_size($thumb_id, $args_3);
-                */
-                
+    $thumb_id = get_post_thumbnail_id($post_id);
+    if(!empty($thumb_id)){
+        $thumb_srcset = wp_get_attachment_image_srcset($thumb_id, 'full');
+        $thumb_sizes = explode( ", ", $thumb_srcset );
+        $thumb_srcset_length = count($thumb_sizes);
+        // Call lazy image size function if the image has only full and/or medium-large size uploaded
+        if ($thumb_srcset_length < 3) {
+            if($type == 'mdb_review') {
                 lazy_image_size($thumb_id, 340, 500, true);
-                lazy_image_size($thumb_id, 480, 9999, false);
-                lazy_image_size($thumb_id, 680, 9999, false);
-                
-            
-            }     
-        }
-        
-        $post_images = mdb_get_post_images($post_id, $thumb_id);
-        if(!empty($post_images)){
-            foreach ($post_images as $image) {
-                $srcset_length = count($image['sizes']);
-                $img_id = $image['id'];
-                if($srcset_length < 3){
-                    /*
-                    $args_1 = array(480, 9999, false);
-                    $args_2 = array(1280, 9999, false);
-                    lazy_image_size($img_id, $args_1);
-                    lazy_image_size($img_id, $args_2);
-                    */
-                    
-                    lazy_image_size($img_id, 480, 9999, false);
-                    lazy_image_size($img_id, 1280, 9999, false);
-                    
-                } 
-            }  
-        }   
-    }  
+            }elseif($cat_name == 'News'){
+                lazy_image_size($thumb_id, 1280, 9999, false);
+            }
+
+            lazy_image_size($thumb_id, 480, 9999, false);
+            lazy_image_size($thumb_id, 680, 9999, false);
+        }     
+    }
+
+    $post_images = mdb_get_post_images($post_id, $thumb_id);
+    if(!empty($post_images)){
+        foreach ($post_images as $image) {
+            $srcset_length = count($image['sizes']);
+            $img_id = $image['id'];
+            if($srcset_length < 3){
+                lazy_image_size($img_id, 480, 9999, false);
+                lazy_image_size($img_id, 1280, 9999, false);
+            } 
+        }  
+    }     
 }
 
 /**
@@ -711,13 +695,26 @@ function movie_genres_output($post_id) {
 }
 
 
-add_filter('mdb_get_single_post_img_markup', 'single_post_img_markup_output', 10, 1);
+add_filter('mdb_get_post_img_markup', 'mdb_post_img_markup_output', 10, 1);
 
 
-function single_post_img_markup_output($attachment_id) {
-    $img_src = wp_get_attachment_image_url($attachment_id, 'full');
-    $img_srcset = wp_get_attachment_image_srcset($attachment_id, 'full');
-    $img_sizes = wp_get_attachment_image_sizes($attachment_id, 'full');
+/**
+ *
+ * Generate custom responsive image html-markup for any post attachment. 
+ *
+ */
+function mdb_post_img_markup_output($attachment_id) {
+    
+    if( is_archive() ) {
+        $img_src = wp_get_attachment_image_url($attachment_id, 'medium_large');
+        $img_srcset = wp_get_attachment_image_srcset($attachment_id, 'medium_large');
+        $img_sizes = wp_get_attachment_image_sizes($attachment_id, 'medium_large');
+        
+    }else{
+        $img_src = wp_get_attachment_image_url($attachment_id, 'full');
+        $img_srcset = wp_get_attachment_image_srcset($attachment_id, 'full');
+        $img_sizes = wp_get_attachment_image_sizes($attachment_id, 'full');
+    }
     
     $output = '<img src="'. esc_url($img_src) .'" srcset="'. esc_attr($img_srcset) .'" sizes="'. esc_attr($img_sizes) .'" />';
     return $output;
@@ -805,7 +802,20 @@ function  strip_shortcode_gallery( $content ) {
 }
 */
 
+add_filter( 'excerpt_length', 'mdb_excerpt_length', 999 );
 
+function mdb_excerpt_length( $length ) {
+    if(is_front_page()){
+      return 20;  
+    }
+	return 50;
+}
+
+add_filter( 'excerpt_more', 'mdb_excerpt_more' );
+
+function mdb_excerpt_more( $more ) {
+	return ' ...';
+}
 
 add_filter('mdb_get_movie_rating', 'mdb_movie_rating_output', 10, 1);
 
@@ -968,7 +978,7 @@ add_filter( 'posts_search', function( $search, \WP_Query $q ) {
 
 
 
-//add_action( 'wp_head', 'mdb_generate_responsive_background_image_styles');
+add_action( 'wp_head', 'mdb_generate_responsive_background_image_styles');
 
 /**
 *
@@ -978,9 +988,8 @@ add_filter( 'posts_search', function( $search, \WP_Query $q ) {
 *
 */
 
-/*
 function mdb_generate_responsive_background_image_styles() {
-    if ( is_singular('smoy_service') || in_category('blogi') ) {
+    if( in_category('news') ) {
         global $post;
         $image_id = get_post_thumbnail_id($post->ID); // set or grab your image id
         $img_srcset = wp_get_attachment_image_srcset( $image_id, 'full' );
@@ -995,11 +1004,8 @@ function mdb_generate_responsive_background_image_styles() {
             if( !isset( $split[0], $split[1] ) )
                 continue;
             
-            if(in_category('blogi')){
-                $background_css = '#header-single { background-image: url(' . esc_url( $split[0] ) . ') !important;}';
-            }else if (is_singular('smoy_service')) {
-                $background_css = '#header-service { background-image: url(' . esc_url( $split[0] ) . ') !important;}';
-            }
+            $background_css = '#single-post-header #single-thumb { background-image: url(' . esc_url( $split[0] ) . ') !important;}';
+            
             // Grab the previous image size as the min-width and/or add the background css to the main css string
             if( !empty( $prev_size ) ) {
                 $css .= '@media only screen and (min-width: ' . $prev_size . ') {';
@@ -1015,12 +1021,9 @@ function mdb_generate_responsive_background_image_styles() {
         $css = !empty( $css ) ? '<style type="text/css">' . $css . '</style>' : '';
         echo $css;
         
-    }else if(is_singular()){
-        $css = '<style type="text/css">#header-single{min-height: 0; height: 2.5em !important;}</style>';
-        echo $css;
     }  
 }
-*/
+
 
 
 
@@ -1138,23 +1141,117 @@ add_filter( 'site-reviews/addon/views/file', function( $file, $view ) {
 
 
 
+
+/*
+add_filter('mdb_get_latest_user_reviews', 'mdb_latest_user_reviews_output', 1);
+
+function mdb_latest_user_reviews_output( $user_reviews ) {
+    if(function_exists('glsr_get_reviews')){
+        $user_reviews = glsr_get_reviews([
+            "count"  => 3
+        ]);
+    }
+    return $user_reviews;
+}
+*/
+
+
+add_action('mdb_get_rating_stars', 'mdb_rating_stars_output', 1);
+
+function mdb_rating_stars_output ( $rating ) {
+    $rating = (int) $rating;
+    ?>
+    <span class="glsr-review-rating">
+    <?php
+    for($i = 1; $i < 6; $i++){
+        if($i <= $rating){
+        ?>
+        <span class="glsr-star-full"></span>
+        <?php
+        }else{
+        ?>
+        <span class="glsr-star-empty"></span>
+        <?php 
+        }   
+    }
+    ?>
+    </span>
+    <?php 
+}
+
+
+add_action('mdb_get_user_reviews', 'mdb_user_reviews_output', 1);
+
+function mdb_user_reviews_output( $post_id ) {
+    $user_reviews = '';
+    if(function_exists('glsr_get_reviews')){
+        $user_reviews = glsr_get_reviews([
+            'assigned_to'  => $post_id
+        ]);
+    }
+    
+    if(!empty($user_reviews)){
+        foreach($user_reviews as $review){
+        ?>
+        <div class="glsr-review panel panel-primary">
+            <p class="glsr-review-meta panel-heading">
+                <?php do_action('mdb_get_rating_stars', $review->rating); ?>
+                <span class="glsr-review-date"><?php echo $review->date; ?></span>
+            </p>
+            <div class="glsr-review-excerpt panel">
+                <p><?php echo $review->content; ?></p>
+            </div>
+            <div class="single-review-author"><span class="en-dash">&ndash;</span><?php echo $review->author; ?></div>
+        </div>
+        <?php
+        }
+    }else{
+    ?>
+    <p><?php _e( 'No user reviews were found.' ); ?></p>
+    <?php
+    }
+}
+
+
+/*
 add_filter( 'site-reviews/rendered/partial', function( $rendered ) {
-    
-    
-    //$rendered = str_replace('class="glsr-reviews ', 'class="glsr-reviews row', $rendered);
-    $rendered = str_replace('class="glsr-review">', 'class="glsr-review panel panel-primary">', $rendered);
-    $rendered = str_replace('class="glsr-review-meta"', 'class="glsr-review-meta panel-heading"', $rendered);
-    $rendered = str_replace('class="glsr-review-excerpt"', 'class="glsr-review-excerpt panel"', $rendered);
+
+    if(is_singular('mdb_review')){
+        //$rendered = str_replace('class="glsr-reviews ', 'class="glsr-reviews row', $rendered);
+        $rendered = str_replace('class="glsr-review">', 'class="glsr-review panel panel-primary">', $rendered);
+        $rendered = str_replace('class="glsr-review-meta"', 'class="glsr-review-meta panel-heading"', $rendered);
+        $rendered = str_replace('class="glsr-review-excerpt"', 'class="glsr-review-excerpt panel"', $rendered);  
+    }
     
     return $rendered;
     
 }, 10, 1 );
 
+*/
+
+
+/*
+add_filter( 'site-reviews/rendered/partial', 'mdb_filter_user_reviews', 2); 
 
 
 
+function mdb_filter_user_reviews ($rendered, $recent_user_reviews) {
     
- 
+    if(is_singular('mdb_review')){
+        //$rendered = str_replace('class="glsr-reviews ', 'class="glsr-reviews row', $rendered);
+        $rendered = str_replace('class="glsr-review">', 'class="glsr-review panel panel-primary">', $rendered);
+        $rendered = str_replace('class="glsr-review-meta"', 'class="glsr-review-meta panel-heading"', $rendered);
+        $rendered = str_replace('class="glsr-review-excerpt"', 'class="glsr-review-excerpt panel"', $rendered);  
+    }elseif(is_home()){
+        
+        
+    }
+    
+    return $rendered;
+    
+}
+*/
+
 
 /* -------------------------------------------------------- */
 /* -------------------------------------------------------- */
