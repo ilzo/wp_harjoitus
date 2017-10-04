@@ -37,7 +37,7 @@ $summary = apply_filters('mdb_get_movie_summary', $post_id);
     <div class="review-content-wrapper col-xs-12 col-sm-7 col-md-8 col-lg-9">
         <div class="review-list-item-header">
             <h3 class="review-title"><?php the_title(); ?></h3>
-            <h3 class="rating-title"><span class="glyphicon glyphicon-star" aria-hidden="true"></span><?php echo $rating ?> / 5</h3>
+            <h3 class="rating-title"><span class="glyphicon glyphicon-star" aria-hidden="true"></span><?php echo $rating ?><span class="rating-slash">/</span>5</h3>
             <div class="review-published">
                 <p><?php echo get_the_date('d.m.Y', $post_id) ?></p>
             </div>
@@ -48,7 +48,7 @@ $summary = apply_filters('mdb_get_movie_summary', $post_id);
     </div>
     <div class="list-item-image-container col-xs-12 col-sm-5 col-md-4 col-lg-3">
         <div class="thumbnail">
-            <?php echo get_the_post_thumbnail( $post_id, 'cover-thumb' ); ?>
+            <?php echo get_the_post_thumbnail( $post_id, 'lazy_480x9999_' ); ?>
         </div>
     </div>    
     </div>
@@ -60,8 +60,6 @@ if(function_exists('mdb_pagination')) {
     mdb_pagination($wp_query->max_num_pages, '', $paged);
 }
 ?>            
-<?php else: ?>
-    <p><?php _e( 'Sorry, no posts matched your criteria.' ); ?></p>
 <?php endif; ?>
 </div>
 </div>

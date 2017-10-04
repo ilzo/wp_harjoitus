@@ -21,6 +21,8 @@ function mdb_setup() {
 	add_theme_support( 'post-thumbnails' );
     //add_image_size( 'cover-thumb', 340, 500, true);
     
+    
+    
     /*
     add_image_size( 'cover-thumb-single-small', 480);
     add_image_size( 'cover-thumb-single', 680);
@@ -169,19 +171,19 @@ function mdb_register_navigation_menus() {
   register_nav_menu('top-menu', __( 'Top Menu', 'moviedb' ));
 }
 
-
-
 function load_scripts() {
+
     wp_register_script('bootstrap-js', get_template_directory_uri() .'/js/bootstrap.min.js', array('jquery'), '3.3.7', true);
     
     wp_register_script('simple-lightbox-js', get_template_directory_uri() .'/js/simpleLightbox.min.js', array('jquery'), '1.2.9', false);
     
-    wp_register_script('app-js', get_template_directory_uri() .'/js/app.js', array('jquery', 'bootstrap-js'), '1.0.0', false);
+    wp_register_script('app-js', get_template_directory_uri() .'/js/app.js', array('jquery', 'bootstrap-js'), '1.0.0', true);
+    
+    wp_register_script('contact-form-js', get_template_directory_uri() .'/js/contact-form.js', array('jquery'), '1.0.0', true);
     
     wp_enqueue_script( 'bootstrap-js' );
     
     wp_enqueue_script( 'app-js' );
-    
     
     if(is_singular('mdb_review') || in_category('news')){
         wp_enqueue_script( 'simple-lightbox-js' );
@@ -199,6 +201,10 @@ function load_scripts() {
         wp_localize_script('', 'WPURLS', array('theme_path' => get_stylesheet_directory_uri()));
     }
     */
+    
+    if(is_page('contact')) { 
+        wp_enqueue_script( 'contact-form-js' );
+    }
 
 }
 
@@ -239,8 +245,6 @@ function mdb_output_custom_header_img_id() {
 }
 */
 
-
-
 require_once( get_template_directory() . '/inc/wp-bootstrap-navwalker.php' );
 
 function bootstrap_nav() {
@@ -256,8 +260,6 @@ function bootstrap_nav() {
 }
 
 
-
-
 add_action( 'widgets_init', 'mdb_widgets_init' );
 
 require_once( get_template_directory() . '/inc/mdb-latest-user-reviews-widget.php' );
@@ -268,6 +270,16 @@ function mdb_widgets_init() {
         'name' => __( 'Main Sidebar', 'moviedb' ),
         'id' => 'primary',
         'description' => __( 'Widgets in this area will be shown on all posts and pages.', 'moviedb' ),
+        'before_widget' => '<div class="widget-container">',
+        'after_widget'  => '</div>',
+        'before_title'  => '<h3 class="widget-title">',
+        'after_title'   => '</h3>',
+    ));
+    
+    register_sidebar(array(
+        'name' => __( 'Social Sidebar', 'moviedb' ),
+        'id' => 'social',
+        'description' => __( 'Sidebar for social widgets. Sidebar is shown above footer at the bottom of page.', 'moviedb' ),
         'before_widget' => '<div class="widget-container">',
         'after_widget'  => '</div>',
         'before_title'  => '<h3 class="widget-title">',
@@ -622,24 +634,25 @@ function lazy_image_size($image_id, $width, $height, $crop) {
     remove_image_size($size_id);
 }
 
+
+
+
+/*
 add_filter('intermediate_image_sizes_advanced', 'mdb_unset_service_image_sizes');
     
 function mdb_unset_service_image_sizes($sizes) {
     $post_id = $_REQUEST['post_id'];
     $type = get_post_type($post_id);
-    /*
-    $wp_term_obj = get_the_category($post_id)[0];
-    $cat_name = $wp_term_obj->name;
-    */
+    //$wp_term_obj = get_the_category($post_id)[0];
+    //$cat_name = $wp_term_obj->name;
     if ($type !== 'mdb_review') { 
         unset($sizes['cover-thumb']);
-        /*
-        unset($sizes['cover-thumb-single-small']);
-        unset($sizes['cover-thumb-single']);
-        */
+        
     }
     return $sizes;       
 }
+
+*/
 
 function mdb_get_post_images($id, $thumb_id, $size = 'full') {
   $images = array();
@@ -705,6 +718,9 @@ add_filter('mdb_get_post_img_markup', 'mdb_post_img_markup_output', 10, 1);
  */
 function mdb_post_img_markup_output($attachment_id) {
     
+    if( empty( $attachment_id) )
+        return false;
+    
     if( is_archive() ) {
         $img_src = wp_get_attachment_image_url($attachment_id, 'medium_large');
         $img_srcset = wp_get_attachment_image_srcset($attachment_id, 'medium_large');
@@ -725,17 +741,26 @@ add_filter('post_gallery', 'mdb_review_gallery_output', 10, 2);
 
 function mdb_review_gallery_output($string, $attr) {
     $output = '<div id="mdb-gallery" class="row">';
-    $output .= '<div class="col-md-12">';
-    $posts = get_posts(array('include' => $attr['ids'],'post_type' => 'attachment'));
+    $posts = get_posts(array('include' => $attr['ids'],'post_type' => 'attachment', 'order' => 'ASC'));
+    $i = 1;
     foreach($posts as $imagePost) {
         $src = esc_url_raw( wp_get_attachment_image_url($imagePost->ID, 'full') );
         $output .= '<figure class="gallery-item col-xs-12 col-sm-6 col-md-4 col-lg-3">';
         $output .= '<a href="'.$src.'" class="thumbnail">';
-        $output .= apply_filters( 'mdb_get_single_post_img_markup', $imagePost->ID);
+        $output .= apply_filters( 'mdb_get_post_img_markup', $imagePost->ID);
         $output .= '</a>';
         $output .=  '</figure>';
+        
+        if($i % 2 === 0){
+            $output .= '<div class="gallery-spacer-two-cols col-xs-12 col-sm-12 col-md-12"></div>';
+        }
+        
+        if($i % 3 === 0){
+            $output .= '<div class="gallery-spacer-three-cols col-xs-12 col-sm-12 col-md-12"></div>';
+        }
+        
+        $i++;
     }
-    $output .= '</div>';
     $output .= '</div>';
     return $output;
 }
@@ -953,17 +978,57 @@ function init_movie_specs_obj($post_id) {
     return $specs_obj;
 }
 
+
+/**
+ *
+ * Change query parameters so that search targets only movie reviews
+ *
+ */
 add_action( 'pre_get_posts', function( $query ) {
-
     if( $query->is_main_query() && !is_admin() && $query->is_search() ) {
-
-        // Change the query parameters
-        //$query->set( 'posts_per_page', 3 );
         $query->set('post_type', 'mdb_review');
-
     }
-
 } );
+
+
+add_filter('posts_where','mdb_search_where');
+add_filter('posts_join', 'mdb_search_join');
+add_filter('posts_groupby', 'mdb_search_groupby');
+
+/**
+ *
+ * Include all custom taxonomies ( mdb_genres ) into custom post type ( mdb_reviews ) search
+ * https://wordpress.stackexchange.com/questions/2623/include-custom-taxonomy-term-in-search
+ *
+ */
+function mdb_search_where($where){
+  global $wpdb;
+  if (!is_admin() && is_search())
+    $where .= "OR (t.name LIKE '%".get_search_query()."%' AND {$wpdb->posts}.post_status = 'publish')";
+  return $where;
+}
+
+function mdb_search_join($join){
+  global $wpdb;
+  if (!is_admin() && is_search())
+    $join .= "LEFT JOIN {$wpdb->term_relationships} tr ON {$wpdb->posts}.ID = tr.object_id INNER JOIN {$wpdb->term_taxonomy} tt ON tt.term_taxonomy_id=tr.term_taxonomy_id INNER JOIN {$wpdb->terms} t ON t.term_id = tt.term_id";
+  return $join;
+}
+
+function mdb_search_groupby($groupby){
+  global $wpdb;
+
+  // we need to group on post ID
+  $groupby_id = "{$wpdb->posts}.ID";
+  if(!is_search() || strpos($groupby, $groupby_id) !== false) return $groupby;
+
+  // groupby was empty, use ours
+  if(!strlen(trim($groupby))) return $groupby_id;
+
+  // wasn't empty, append ours
+  return $groupby.", ".$groupby_id;
+}
+
 
 /**
  * Halt the main query in the case of an empty search 
@@ -1199,7 +1264,12 @@ function mdb_user_reviews_output( $post_id ) {
                 <span class="glsr-review-date"><?php echo $review->date; ?></span>
             </p>
             <div class="glsr-review-excerpt panel">
-                <p><?php echo $review->content; ?></p>
+                <p>
+                <?php
+                $content_with_linebreaks = wpautop( $review->content, true );
+                echo $content_with_linebreaks; 
+                ?>
+                </p>
             </div>
             <div class="single-review-author"><span class="en-dash">&ndash;</span><?php echo $review->author; ?></div>
         </div>
@@ -1268,17 +1338,28 @@ function mdb_customize_register( $wp_customize ) {
     /* ------------- SECTIONS ------------ */
     /* ----------------------------------- */
     
-    /* ------ Site Background Image ------ */
+    /* ------ Site Background ------ */
     
-    
-    $linebreak = '<div style="margin: 10px 0;"></div>';
-    
-    $wp_customize->add_section( 'mdb_site_bg_section', array(
-      'title' => __( 'Site background image', 'moviedb' ),
-      'description' => sprintf( __( 'Upload site background image here. The original full-sized image will be used for desktop screens and the cropped version for small mobile screens. Recommended resolution for original image is 3000x2000 at most. Uploaded image should be optimized for web use (file size no more than 300 - 500 kB). Use JPEG file format only. %s Note: Use custom css panel to add custom styling for background images when necessary.', 'moviedb' ), $linebreak ),
+    $wp_customize->add_section( 'mdb_background_section', array(
+      'title' => __( 'Site background', 'moviedb' ),
       'capability' => 'edit_theme_options'
     ));
     
+    
+    /* ------ Contact Info ------ */
+    
+    $wp_customize->add_section( 'mdb_contact_section', array(
+      'title' => __( 'Contact info', 'moviedb' ),
+      'capability' => 'edit_theme_options'
+    ));
+    
+    
+    /* ------ Footer ------ */
+    
+    $wp_customize->add_section( 'mdb_footer_section', array(
+      'title' => __( 'Footer content', 'moviedb' ),
+      'capability' => 'edit_theme_options'
+    ));
     
 
     /* ----------------------------------- */
@@ -1286,19 +1367,33 @@ function mdb_customize_register( $wp_customize ) {
     /* ----------------------------------- */
     
 
-    /* ------ Front-Page Background Image ------ */
+    /* ------ Site Background ------ */
     
-    $wp_customize->add_setting('mdb_site_bg_img', array(
+    $wp_customize->add_setting('mdb_background_img', array(
             'type' => 'theme_mod',
             'capability' => 'edit_theme_options',
             'sanitize_callback' => 'absint'
     ));
     
-    $wp_customize->add_setting('mdb_site_bg_img_position_x', array(
+    $wp_customize->add_setting('mdb_background_img_alt_text', array(
             'type' => 'theme_mod',
             'capability' => 'edit_theme_options',
-            'default' => '50',
-            'sanitize_callback' => 'absint'
+            'default' => '',
+            'sanitize_callback' => 'sanitize_text_field'
+    ));
+    
+    $wp_customize->add_setting('mdb_background_img_position_top', array(
+            'type' => 'theme_mod',
+            'capability' => 'edit_theme_options',
+            'default' => '0',
+            'sanitize_callback' => 'sanitize_text_field'
+    ));
+    
+    $wp_customize->add_setting('mdb_background_img_position_right', array(
+            'type' => 'theme_mod',
+            'capability' => 'edit_theme_options',
+            'default' => '0',
+            'sanitize_callback' => 'sanitize_text_field'
     ));
     
     /*
@@ -1323,6 +1418,35 @@ function mdb_customize_register( $wp_customize ) {
     */
     
     
+    /* ------ Contact Info ------ */
+    
+    
+    $wp_customize->add_setting('mdb_contact_info_tel', array(
+            'type' => 'theme_mod',
+            'capability' => 'edit_theme_options',
+            'sanitize_callback' => 'sanitize_text_field'
+    ));
+    
+    $wp_customize->add_setting('mdb_contact_info_email', array(
+            'type' => 'theme_mod',
+            'capability' => 'edit_theme_options',
+            'sanitize_callback' => 'sanitize_text_field'
+    ));
+    
+    $wp_customize->add_setting('mdb_contact_form_shortcode', array(
+            'type' => 'theme_mod',
+            'capability' => 'edit_theme_options',
+            'sanitize_callback' => 'sanitize_text_field'
+    ));
+    
+    
+    /* ------ Footer ------ */
+    
+    $wp_customize->add_setting('mdb_footer_info', array(
+            'type' => 'theme_mod',
+            'capability' => 'edit_theme_options',
+            'sanitize_callback' => 'sanitize_text_field'
+    ));
     
     
     
@@ -1333,6 +1457,8 @@ function mdb_customize_register( $wp_customize ) {
     
     /* ------ Front-Page Background Image ------ */
     
+    /*
+    
     $wp_customize->add_control( new WP_Customize_Cropped_Image_Control( $wp_customize, 'mdb_site_bg_img', array(
         'section'     => 'mdb_site_bg_section',
         'label'       => __('Site background image', 'moviedb'),
@@ -1342,9 +1468,37 @@ function mdb_customize_register( $wp_customize ) {
         'width'       => 530,
         'height'      => 1000
     )));
+    */
     
     
+    $wp_customize->add_control( new WP_Customize_Media_Control( $wp_customize, 'mdb_background_img', array(
+        'label' => __('Site background image', 'moviedb'),
+        'description' => __('Insert the site background image here.', 'moviedb'),
+        'section' => 'mdb_background_section',
+        'mime_type' => 'image'
+    )));
     
+    $wp_customize->add_control( 'mdb_background_img_alt_text', array(
+        'label' => __( 'Background image alt text', 'moviedb'),
+        'type' => 'text',
+        'section' => 'mdb_background_section'
+    ));
+    
+    $wp_customize->add_control( 'mdb_background_img_position_top', array(
+        'label' => __( 'Background image top position', 'moviedb'),
+        'description' => __('Insert the background image position top CSS value here.', 'moviedb'),
+        'type' => 'text',
+        'section' => 'mdb_background_section'
+    ));
+    
+    $wp_customize->add_control( 'mdb_background_img_position_right', array(
+        'label' => __( 'Background image right position', 'moviedb'),
+        'description' => __('Insert the background image position right CSS value here.', 'moviedb'),
+        'type' => 'text',
+        'section' => 'mdb_background_section'
+    ));
+    
+    /*
     $wp_customize->add_control( 'mdb_site_bg_img_position_x', array(
             'type' => 'range',
             'section' => 'mdb_site_bg_section',
@@ -1356,6 +1510,7 @@ function mdb_customize_register( $wp_customize ) {
             'step' => 1,
           )
     ));
+    */
     
     /*
     $wp_customize->add_control( 'mdb_front_bg_img_position_y', array(
@@ -1373,10 +1528,6 @@ function mdb_customize_register( $wp_customize ) {
     */
     
     
-    
-    
-    
-    
     /*
     $wp_customize->add_control( 'mdb_bg_img_pos', array(
         'label' => __( 'Background position', 'moviedb'),
@@ -1388,10 +1539,37 @@ function mdb_customize_register( $wp_customize ) {
     */
     
     
-
+    /* ------ Contact Info ------ */
+    
+    $wp_customize->add_control( 'mdb_contact_info_tel', array(
+        'label' => __( 'Phone', 'moviedb'),
+        'type' => 'text',
+        'section' => 'mdb_contact_section'
+    ));
+    
+    $wp_customize->add_control( 'mdb_contact_info_email', array(
+        'label' => __( 'Email', 'moviedb'),
+        'type' => 'text',
+        'section' => 'mdb_contact_section'
+    ));
+    
+    $wp_customize->add_control( 'mdb_contact_form_shortcode', array(
+        'label' => __( 'Contact form shortcode', 'moviedb'),
+        'type' => 'text',
+        'section' => 'mdb_contact_section'
+    ));
     
     
-
+    /* ------ Footer ------ */
+    
+    $wp_customize->add_control( 'mdb_footer_info', array(
+        'label' => __( 'Footer info', 'moviedb'),
+        'description' => __('Insert footer info here.', 'moviedb'),
+        'type' => 'text',
+        'section' => 'mdb_footer_section'
+    ));
+    
+    
 }
 
 
@@ -1402,52 +1580,29 @@ function mdb_customize_register( $wp_customize ) {
 /* -------------------------------------------------------- */
 
 
-
-
-
-
-
-
-
 add_action( 'wp_head', 'mdb_site_background_styles');
 
 function mdb_site_background_styles() {
-        $site_bg_img = get_theme_mod('mdb_site_bg_img');
-               
+    
+        $site_bg_img = get_theme_mod('mdb_background_img');
+    
         if(!empty($site_bg_img)){
             $css = array();
-            $css_media_query = array();
-            $desktop_img_id = $site_bg_img - 1;
-            $desktop_src = wp_get_attachment_image_src($desktop_img_id, 'full')[0];
-            $mobile_src = wp_get_attachment_image_src($site_bg_img, 'full')[0];
-            $bg_img_pos_x = get_theme_mod('mdb_site_bg_img_position_x');
-            //$bg_img_pos_y = get_theme_mod('mdb_front_bg_img_position_y');
-
-            if(!empty($mobile_src) && !empty($desktop_src)){
-                $css['body']['background-image'] = "url(\"".$desktop_src."\")";
-                $css_media_query['body']['background-image'] = "url(\"".$mobile_src."\")";
-                $css_media_query['body']['background-position'] = "center";
-            }
-            
-            
-            if(!empty($bg_img_pos_x)){
-                $css['body']['background-position'] = $bg_img_pos_x . "% 50%";
+            $bg_img_pos_top = get_theme_mod('mdb_background_img_position_top');
+            $bg_img_pos_right = get_theme_mod('mdb_background_img_position_right');
+        
+            if(!empty($bg_img_pos_top)){
+                $css['#bg-img-container']['top'] = $bg_img_pos_top;
             }else{
-                $css['body']['background-position'] =  "50% 50%";
+                $css['#bg-img-container']['top'] =  "0";
+            }
+
+            if(!empty($bg_img_pos_right)){
+                $css['#bg-img-container']['right'] = $bg_img_pos_right;
+            }else{
+                $css['#bg-img-container']['right'] =  "0";
             }
             
-            /*
-            if(empty($bg_img_pos_x) && empty($bg_img_pos_y)){
-                $css['body']['background-position'] = "50% 50%";
-            }else if(!empty($bg_img_pos_x) && empty($bg_img_pos_y)){
-                $css['body']['background-position'] = $bg_img_pos_x . "% 50%";
-            }else if(empty($bg_img_pos_x) && !empty($bg_img_pos_y)){
-                $css['body']['background-position'] =  "50% ". $bg_img_pos_y ."%";
-            }else{
-                $css['body']['background-position'] = $bg_img_pos_x . "% ". $bg_img_pos_y ."%";
-            }
-            */
-
             $final_css = '<style type="text/css">';
             foreach ( $css as $style => $style_array ) {
                 $final_css .= $style . '{';
@@ -1456,22 +1611,28 @@ function mdb_site_background_styles() {
                 }
                 $final_css .= '}';
             }
-            $final_css .= '@media only screen and (max-width: 960px) {';
-            foreach ( $css_media_query as $style => $style_array ) {
-                $final_css .= $style . '{';
-                foreach ( $style_array as $property => $value ) {
-                    $final_css .= $property . ':' . $value . ';';
-                }
-                $final_css .= '}';
-            }
-            $final_css .= '}';
+            
             $final_css .= '</style>';
             echo $final_css;
-        }     
+        }
     
 }
 
 
+add_action('mdb_get_background_image', 'mdb_background_image_output');
+
+function mdb_background_image_output() {
+    $site_bg_img = get_theme_mod('mdb_background_img');
+    $src = wp_get_attachment_image_src($site_bg_img, 'full')[0];
+    $alt = get_theme_mod('mdb_background_img_alt_text');
+    $meta = wp_get_attachment_metadata( $site_bg_img );
+    
+    ob_start();
+    require_once( get_template_directory() . '/template-parts/mdb-background-image.php' );
+    $output = ob_get_clean();
+    echo $output;
+    
+}
 
 
 
@@ -1494,7 +1655,7 @@ function mdb_reviews_home_page_output() {
         
         $reviews = array();
         
-        $mdb_reviews_query = new WP_Query( array( 'post_type' => 'mdb_review', 'order' => 'DESC', 'posts_per_page'=> 6) );
+        $mdb_reviews_query = new WP_Query( array( 'post_type' => 'mdb_review', 'order' => 'DESC', 'posts_per_page'=> 12) );
         $mdb_review_posts = $mdb_reviews_query->posts;
         
         
@@ -1516,7 +1677,7 @@ function mdb_reviews_home_page_output() {
         //print_r($mdb_review_posts);
         
         ob_start();
-        require_once(get_template_directory() . '/template-parts/mdb-recent-reviews-home.php' );
+        require_once( get_template_directory() . '/template-parts/mdb-recent-reviews-home.php' );
         $output = ob_get_clean();
         echo $output;
         wp_reset_postdata();
@@ -1543,9 +1704,38 @@ add_action('mdb_get_contact_page_content', 'mdb_contact_page_content_output');
 
 function mdb_contact_page_content_output() {
     if(is_page('contact')) {
-        echo 'Hello world!';
+        
+        $contact_form_shortcode = get_theme_mod('mdb_contact_form_shortcode');
+        $tel = get_theme_mod('mdb_contact_info_tel');
+        $email = get_theme_mod('mdb_contact_info_email');
+        
+       
+        
+        ob_start();
+        require_once( get_template_directory() . '/template-parts/mdb-contact-page-content.php' );
+        $output = ob_get_clean();
+        echo $output;
         
     }   
+}
+
+
+
+add_action('mdb_get_footer_content', 'mdb_footer_content_output');
+
+function mdb_footer_content_output() {
+
+        
+        $footer_info = get_theme_mod('mdb_footer_info');
+        
+        
+        //print_r($mdb_review_posts);
+        
+        ob_start();
+        require_once( get_template_directory() . '/template-parts/mdb-footer-content.php' );
+        $output = ob_get_clean();
+        echo $output;
+       
 }
 
 

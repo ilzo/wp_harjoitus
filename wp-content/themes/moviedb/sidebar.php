@@ -1,8 +1,7 @@
 <?php
 /**
- * The sidebar containing the newsletter subscription widget
+ * The primary sidebar. Contains latest user reviews and news articles widgets.
  *
- * @link https://developer.wordpress.org/themes/basics/template-files/#template-partials
  *
  * @package WordPress
  * @subpackage Smoy

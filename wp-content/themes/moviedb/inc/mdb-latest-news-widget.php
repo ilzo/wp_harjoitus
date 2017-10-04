@@ -91,7 +91,7 @@ class MDB_Latest_News_Widget extends WP_Widget {
                     <span class="widget-item-date"><?php echo get_the_date('d.m.Y'); ?></span>
                     <?php endif; ?>
                 </div>
-                <div class="widget-item-content"><?php echo wp_trim_words( get_the_excerpt(), 20, ' ...' ); ?></div>
+                <div class="widget-item-content"><p><?php echo wp_trim_words( get_the_excerpt(), 20, ' ...' ); ?></p></div>
                 </a>
             </li>
 		<?php endwhile; ?>

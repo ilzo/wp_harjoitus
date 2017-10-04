@@ -1,8 +1,8 @@
 </div>  <!-- END OF SITE CONTENT -->
-<section id="social" class="home-section">
-</section>
+<?php get_sidebar('social'); ?>
 <footer id="footer">
 <div class="footer-container">
+    <?php do_action('mdb_get_footer_content'); ?>
 </div> 
 </footer>
 </div>  <!-- END OF PAGE WRAPPER -->

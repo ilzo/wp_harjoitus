@@ -47,7 +47,7 @@ $summary = apply_filters('mdb_get_movie_summary', $post_id);
     </div>
     <div class="list-item-image-container col-xs-12 col-sm-5 col-md-4 col-lg-3">
         <div class="thumbnail">
-            <?php echo get_the_post_thumbnail( $post_id, 'cover-thumb' ); ?>
+            <?php echo get_the_post_thumbnail( $post_id, 'lazy_480x9999_' ); ?>
         </div>
     </div>    
     </div>

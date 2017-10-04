@@ -26,19 +26,15 @@ $mdb_query = new WP_Query( $args );
 <?php if ( $mdb_query->have_posts() ) : ?>
 <?php while ( $mdb_query->have_posts() ) : $mdb_query->the_post(); 
 $post_id = get_the_ID();
-    
-if(has_post_thumbnail()){
-    $thumb_id = get_post_thumbnail_id($post_id);
-    $thumb_markup = apply_filters( 'mdb_get_post_img_markup', $thumb_id);
-}    
-       
+$thumb_id = get_post_thumbnail_id( $post_id );
+$thumb_markup = apply_filters( 'mdb_get_post_img_markup', $thumb_id);    
 ?>
 <figure id="post-<?php echo $post_id ?>" class="post-list-item container">
 <a class="post-link" href="<?php the_permalink(); ?>">
 <div class="row">
-    <div class="col-xs-12 col-sm-5 col-md-3 col-lg-3">
+    <div class="list-item-image-container col-xs-12 col-sm-5 col-md-3 col-lg-3">
         <div class="thumbnail">
-            <?php echo $thumb_markup; ?>
+            <?php if($thumb_markup){ echo $thumb_markup; } ?>
         </div>
     </div>
     <div class="post-content-wrapper col-xs-12 col-sm-7 col-md-9 col-lg-9">

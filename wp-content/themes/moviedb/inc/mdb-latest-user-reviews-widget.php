@@ -61,7 +61,7 @@ class MDB_Latest_User_Reviews_Widget extends WP_Widget {
                 <div class="widget-item-rating">
                 <?php do_action('mdb_get_rating_stars', $review->rating); ?>
                 </div>
-                <div class="widget-item-content"><?php echo wp_trim_words( $review->content, 30, ' ...' ); ?><div class="widget-item-author"><span class="en-dash">&ndash;</span><?php echo $review->author; ?></div></div>
+                <div class="widget-item-content"><p><?php echo wp_trim_words( $review->content, 30, ' ...' ); ?></p><div class="widget-item-author"><span class="en-dash">&ndash;</span><?php echo $review->author; ?></div></div>
                 </a>
             </li>
         <?php endforeach; ?>

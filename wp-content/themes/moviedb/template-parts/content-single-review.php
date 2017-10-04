@@ -10,25 +10,25 @@ $post_id = get_the_ID();
 
 $rating = apply_filters('mdb_get_movie_rating', $post_id);
 
-if(has_post_thumbnail()){
-    $thumb_id = get_post_thumbnail_id($post_id);
-    $cover_pic_markup = apply_filters( 'mdb_get_post_img_markup', $thumb_id);
-}
-
 $specs = apply_filters( 'movie_specs', $post_id);
+
 ?>
 <article id="post-<?php echo $post_id ?>" <?php post_class(); ?>>
     <div class="container-fluid">
         <header class="single-review-header row">
-            <div id="single-review-title" class="col-md-9">
+            <div id="single-review-title" class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
                 <?php the_title( '<h1 class="movie-title">', '</h1>' ); ?>
             </div>
-            <div id="single-review-rating" class="col-md-3"><h2 class="rating-title"><span class="glyphicon glyphicon-star" aria-hidden="true"></span><?php echo $rating; ?><span class="rating-slash">/</span>5</h2></div>
+            <div id="single-review-rating" class="col-xs-12 col-sm-12 col-md-3 col-lg-3"><h2 class="rating-title"><span class="glyphicon glyphicon-star" aria-hidden="true"></span><?php echo $rating; ?><span class="rating-slash">/</span>5</h2></div>
         </header>
         <div class="row">
-            <?php if($thumb_id) : ?>
+            <?php if( has_post_thumbnail() ) : ?>
             <div class="cover-image-container col-sm-12 col-md-4 col-lg-3">
-                <?php echo $cover_pic_markup; ?>
+                <?php 
+                $thumb_id = get_post_thumbnail_id($post_id);
+                $cover_pic_markup = apply_filters( 'mdb_get_post_img_markup', $thumb_id);
+                echo $cover_pic_markup; 
+                ?>
             </div>
             <?php endif; ?>
             <div class="movie-specs-container col-sm-12 col-md-8 col-lg-9">

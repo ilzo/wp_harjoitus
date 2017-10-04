@@ -11,7 +11,7 @@
 if ( !defined('ABSPATH') ) {
     exit;
 }
-get_header(); ?>
+get_header('single'); ?>
 <div id="primary" class="content-area">
 	<div id="main" class="site-main" role="main">
 		<?php do_action('mdb_get_contact_page_content'); ?>
