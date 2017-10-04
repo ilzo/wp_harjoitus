@@ -2,13 +2,10 @@
 add_action( 'after_setup_theme', 'mdb_setup' );
 
 function mdb_setup() {
-	
+    
 	add_theme_support( 'title-tag' );
     
     load_theme_textdomain( 'moviedb' );
-    
-    
-    
     
 	add_theme_support( 'custom-logo', array(
 		'height'      => 500,
@@ -16,23 +13,8 @@ function mdb_setup() {
 		'flex-height' => true,
 	) );
     
-    //remove_filter( 'the_content', 'wpautop' );
-    
 	add_theme_support( 'post-thumbnails' );
-    //add_image_size( 'cover-thumb', 340, 500, true);
-    
-    
-    
-    /*
-    add_image_size( 'cover-thumb-single-small', 480);
-    add_image_size( 'cover-thumb-single', 680);
-    */
-    
-    /*
-    add_image_size( 'service-thumb-desktop', 1280);
-    add_image_size( 'service-thumb-mobile', 460, 230, true);
-    */
-    
+   
 	/*
 	 * Switch default core markup for search form, comment form, and comments
 	 * to output valid HTML5.
@@ -61,28 +43,7 @@ function mdb_setup() {
 		'audio',
 		'chat',
 	) );
-    
-    /*
-    add_theme_support( 'custom-background', array(
-        'default-color'             => '',
-        'default-image'             => '',
-        'default-size'              => '',
-        'default-repeat'            => 'no-repeat',
-        'default-position-x'        => 'center',
-        'default-position-y'        => 'center',
-        'default-attachment'        => '',
-        //'wp-head-callback'          => '_custom_background_cb',
-        'admin-head-callback'       => '',
-        'admin-preview-callback'    => ''
-    ));
-	*/
-    
-    /*
-    if ( ! isset( $content_width ) ) {
-        $content_width = 800;
-    }
-    */
-         
+           
 }
 
 add_action('init', 'mdb_review_init');
@@ -189,19 +150,6 @@ function load_scripts() {
         wp_enqueue_script( 'simple-lightbox-js' );
     }
     
-    /*
-    if(is_home()){
-        wp_enqueue_script( '' );
-    }
-    if(is_home() || is_page('eng')){
-       wp_enqueue_script( '' );
-    }
-    if(is_home() || is_singular('mdb_review') || (is_singular() && in_category('blogi'))){
-        wp_enqueue_script( '' );
-        wp_localize_script('', 'WPURLS', array('theme_path' => get_stylesheet_directory_uri()));
-    }
-    */
-    
     if(is_page('contact')) { 
         wp_enqueue_script( 'contact-form-js' );
     }
@@ -216,34 +164,9 @@ function mdb_styles() {
     }
 }
 
-/*
-function mdb_load_dashicons_front_end() {
-    wp_enqueue_style( 'dashicons' );
-}
-*/
 
 add_action( 'wp_enqueue_scripts', 'mdb_styles' );
 add_action( 'wp_enqueue_scripts', 'load_scripts' );
-
-//add_action( 'wp_enqueue_scripts', 'mdb_load_dashicons_front_end' );
-
-
-/*
-
-add_action('mdb_get_custom_header_image_id', 'mdb_output_custom_header_img_id');
-
-function mdb_output_custom_header_img_id() {
-    // Get the header image data    
-    $data = get_object_vars(get_theme_mod('header_image_data'));
-    //$data = get_theme_mod('header_image_data');
-    $attachment_id = is_array($data) && isset($data['attachment_id']) ? $data['attachment_id'] : false;
-
-    if($attachment_id) {
-       echo esc_attr($attachment_id);
-    }
-    
-}
-*/
 
 require_once( get_template_directory() . '/inc/wp-bootstrap-navwalker.php' );
 
@@ -323,12 +246,6 @@ function mdb_review_metaboxes( $post ) {
 }
 
 function print_movie_specs_meta_box( $post, $metabox ) {
-    
-    /*
-    wp_nonce_field( 'mdb_review_summary_meta_box', 'mdb_review_summary_meta_box_nonce' );
-    $value = get_post_meta( $post->ID, '_movie_summary', true );
-    echo '<textarea style="width:100%" id="movie_summary" name="movie_summary">' . esc_attr( $value ) . '</textarea>';
-    */
     $post_id = $post->ID;
     $year = get_post_meta( $post_id, 'movie_year', true );
     $director = get_post_meta( $post_id, 'movie_director', true );
@@ -367,9 +284,7 @@ function print_movie_specs_meta_box( $post, $metabox ) {
     <input type="hidden" name="<?php echo $metabox['id']; ?>_fields[]" value="movie_summary" />
     
     <?php
-    
-    
-    
+  
 }
 
 function print_movie_rating_meta_box( $post ) {
@@ -400,8 +315,6 @@ function save_movie_specs_metabox( $post_id ) {
     
     // Check if this information is being submitted by means of an autosave; if so, then do not process any of the following code
     if( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ){ return; }
-    
-    
     
     if ( isset( $_POST['post_type'] ) && 'page' == $_POST['post_type'] ) {
         if ( !current_user_can( 'edit_page', $post_id ) ) {
@@ -441,10 +354,8 @@ function save_movie_specs_metabox( $post_id ) {
             update_post_meta($post_id, $field_id, $_POST[ $field_id ]);
         }
     }
-
-        
+      
 }
-
 
 
 add_action( 'save_post', 'save_movie_rating_metabox' );
@@ -520,8 +431,6 @@ function save_movie_rating_metabox( $post_id ) {
     update_post_meta( $post_id, 'movie_rating', $rating_data );
 }
 
-
-
 add_filter( 'manage_mdb_review_posts_columns', 'mdb_showid_add_id_column', 5 );
 add_action( 'manage_mdb_review_posts_custom_column', 'mdb_showid_id_column_content', 5, 2 );
 
@@ -536,8 +445,6 @@ function mdb_showid_id_column_content( $column, $id ) {
     echo $id;
   }
 }
-
-
 
 
 add_action( 'save_post', 'mdb_upload_post_custom_image_sizes' );
@@ -635,25 +542,6 @@ function lazy_image_size($image_id, $width, $height, $crop) {
 }
 
 
-
-
-/*
-add_filter('intermediate_image_sizes_advanced', 'mdb_unset_service_image_sizes');
-    
-function mdb_unset_service_image_sizes($sizes) {
-    $post_id = $_REQUEST['post_id'];
-    $type = get_post_type($post_id);
-    //$wp_term_obj = get_the_category($post_id)[0];
-    //$cat_name = $wp_term_obj->name;
-    if ($type !== 'mdb_review') { 
-        unset($sizes['cover-thumb']);
-        
-    }
-    return $sizes;       
-}
-
-*/
-
 function mdb_get_post_images($id, $thumb_id, $size = 'full') {
   $images = array();
   $attachments = get_posts( array(
@@ -678,7 +566,6 @@ function mdb_get_post_images($id, $thumb_id, $size = 'full') {
   }
  return $images;
 }
-
 
 
 add_action('mdb_get_movie_genres', 'movie_genres_output', 10, 1);
@@ -710,7 +597,6 @@ function movie_genres_output($post_id) {
 
 add_filter('mdb_get_post_img_markup', 'mdb_post_img_markup_output', 10, 1);
 
-
 /**
  *
  * Generate custom responsive image html-markup for any post attachment. 
@@ -735,7 +621,6 @@ function mdb_post_img_markup_output($attachment_id) {
     $output = '<img src="'. esc_url($img_src) .'" srcset="'. esc_attr($img_srcset) .'" sizes="'. esc_attr($img_sizes) .'" />';
     return $output;
 }
-
 
 add_filter('post_gallery', 'mdb_review_gallery_output', 10, 2);
 
@@ -765,7 +650,6 @@ function mdb_review_gallery_output($string, $attr) {
     return $output;
 }
 
-
 add_filter( 'the_content', 'mdb_strip_content_gallery', 10 );
 
 function mdb_strip_content_gallery( $content ) {
@@ -783,49 +667,6 @@ function mdb_strip_content_gallery( $content ) {
     }
     return $content;
 }
-
-
-
-
-/*
-add_filter('the_content', 'strip_gallery');
-
-function strip_gallery($content){
-   
-    preg_match_all( '/' . get_shortcode_regex() . '/s', $content, $matches, PREG_SET_ORDER );
-
-    if ( ! empty( $matches ) ) {
-        foreach ( $matches as $shortcode ) {
-            if ( 'gallery' === $shortcode[2] ) {
-                $pos = strpos( $content, $shortcode[0] );
-                if( false !== $pos ) {
-                    return substr_replace( $content, '', $pos, strlen( $shortcode[0] ) );
-                }
-            }
-        }
-    }
-
-    return $content;    
-}
-*/
-
-
-
-/*
-function  strip_shortcode_gallery( $content ) {
-    preg_match_all( '/'. get_shortcode_regex() .'/s', $content, $matches, PREG_SET_ORDER );
-    if ( ! empty( $matches ) ) {
-        foreach ( $matches as $shortcode ) {
-            if ( 'gallery' === $shortcode[2] ) {
-                $pos = strpos( $content, $shortcode[0] );
-                if ($pos !== false)
-                    return substr_replace( $content, '', $pos, strlen($shortcode[0]) );
-            }
-        }
-    }
-    return $content;
-}
-*/
 
 add_filter( 'excerpt_length', 'mdb_excerpt_length', 999 );
 
@@ -853,7 +694,6 @@ function mdb_movie_rating_output($post_id) {
     return $rating;
 }
 
-
 add_filter('mdb_get_movie_summary', 'mdb_movie_summary_output', 10, 1);
 
 function mdb_movie_summary_output($post_id) {
@@ -864,8 +704,6 @@ function mdb_movie_summary_output($post_id) {
     
     return $summary;
 }
-
-
 
 add_filter( 'movie_specs', 'init_movie_specs_obj' ); 
 
@@ -1205,22 +1043,6 @@ add_filter( 'site-reviews/addon/views/file', function( $file, $view ) {
 }, 10, 2 );
 
 
-
-
-/*
-add_filter('mdb_get_latest_user_reviews', 'mdb_latest_user_reviews_output', 1);
-
-function mdb_latest_user_reviews_output( $user_reviews ) {
-    if(function_exists('glsr_get_reviews')){
-        $user_reviews = glsr_get_reviews([
-            "count"  => 3
-        ]);
-    }
-    return $user_reviews;
-}
-*/
-
-
 add_action('mdb_get_rating_stars', 'mdb_rating_stars_output', 1);
 
 function mdb_rating_stars_output ( $rating ) {
@@ -1396,27 +1218,6 @@ function mdb_customize_register( $wp_customize ) {
             'sanitize_callback' => 'sanitize_text_field'
     ));
     
-    /*
-    $wp_customize->add_setting('mdb_front_bg_img_position_y', array(
-            'type' => 'theme_mod',
-            'capability' => 'edit_theme_options',
-            'default' => '50',
-            'sanitize_callback' => 'absint'
-    ));
-    */
-    
-    
-    
-    
-    /*
-    
-    $wp_customize->add_setting('mdb_bg_img_pos', array(
-            'type' => 'theme_mod',
-            'capability' => 'edit_theme_options',
-            'sanitize_callback' => 'sanitize_text_field'
-    ));
-    */
-    
     
     /* ------ Contact Info ------ */
     
@@ -1455,21 +1256,7 @@ function mdb_customize_register( $wp_customize ) {
     /* ----------------------------------- */
     
     
-    /* ------ Front-Page Background Image ------ */
-    
-    /*
-    
-    $wp_customize->add_control( new WP_Customize_Cropped_Image_Control( $wp_customize, 'mdb_site_bg_img', array(
-        'section'     => 'mdb_site_bg_section',
-        'label'       => __('Site background image', 'moviedb'),
-        'description' => __('Insert the about us section header background image here.', 'moviedb'),
-        'flex_width'  => false, 
-        'flex_height' => false, 
-        'width'       => 530,
-        'height'      => 1000
-    )));
-    */
-    
+    /* ------ Site Background ------ */
     
     $wp_customize->add_control( new WP_Customize_Media_Control( $wp_customize, 'mdb_background_img', array(
         'label' => __('Site background image', 'moviedb'),
@@ -1497,46 +1284,6 @@ function mdb_customize_register( $wp_customize ) {
         'type' => 'text',
         'section' => 'mdb_background_section'
     ));
-    
-    /*
-    $wp_customize->add_control( 'mdb_site_bg_img_position_x', array(
-            'type' => 'range',
-            'section' => 'mdb_site_bg_section',
-            'label' => __( 'Site background image position', 'moviedb'),
-            'description' => __( 'Adjust the background image horizontal position (default 50)', 'moviedb'),
-            'input_attrs' => array(
-            'min' => 0,
-            'max' => 100,
-            'step' => 1,
-          )
-    ));
-    */
-    
-    /*
-    $wp_customize->add_control( 'mdb_front_bg_img_position_y', array(
-            'type' => 'range',
-            'section' => 'mdb_front_bg_section',
-            'label' => __( 'Front page background image position Y', 'moviedb'),
-            'description' => __( 'Adjust the background image vertical position (default 50)', 'moviedb'),
-            'input_attrs' => array(
-            'min' => 0,
-            'max' => 100,
-            'step' => 1,
-          ),
-            'active_callback' => 'is_front_page'
-    ));
-    */
-    
-    
-    /*
-    $wp_customize->add_control( 'mdb_bg_img_pos', array(
-        'label' => __( 'Background position', 'moviedb'),
-        'description' => __('Adjust about us section background position. Use normal css units and values. The default is 50% 50%.', 'moviedb'),
-        'type' => 'text',
-        'section' => 'mdb_front_bg_section',
-        'active_callback' => 'is_front_page'
-    ));
-    */
     
     
     /* ------ Contact Info ------ */
@@ -1657,12 +1404,8 @@ function mdb_reviews_home_page_output() {
         
         $mdb_reviews_query = new WP_Query( array( 'post_type' => 'mdb_review', 'order' => 'DESC', 'posts_per_page'=> 12) );
         $mdb_review_posts = $mdb_reviews_query->posts;
-        
-        
-        
         $i = 0;
         foreach($mdb_review_posts as $post) { 
-            //$this_review_thumb = esc_url(get_the_post_thumbnail_url($post->ID, 'cover-thumb'));
             $this_review_permalink = esc_url(get_permalink($post));
             $this_review_time = get_the_time( 'U', $post->ID );
             $published = human_time_diff( $this_review_time, current_time('timestamp') ) . ' ago';
@@ -1671,10 +1414,6 @@ function mdb_reviews_home_page_output() {
             $reviews[$i] = $this_review;
             $i++;
         }
-        
-        
-        
-        //print_r($mdb_review_posts);
         
         ob_start();
         require_once( get_template_directory() . '/template-parts/mdb-recent-reviews-home.php' );
@@ -1685,31 +1424,13 @@ function mdb_reviews_home_page_output() {
     }   
 }
 
-
-
-
-/*
-add_action( 'pre_get_posts', 'mdb_post_count_queries' );
-
-function mdb_post_count_queries( $query ) {
-  if (!is_admin() && $query->is_main_query()){
-    if(is_page('reviews')){
-       $query->set('posts_per_page', 1);
-    }
-  }
-}
-*/
-
 add_action('mdb_get_contact_page_content', 'mdb_contact_page_content_output');
 
 function mdb_contact_page_content_output() {
     if(is_page('contact')) {
-        
         $contact_form_shortcode = get_theme_mod('mdb_contact_form_shortcode');
         $tel = get_theme_mod('mdb_contact_info_tel');
         $email = get_theme_mod('mdb_contact_info_email');
-        
-       
         
         ob_start();
         require_once( get_template_directory() . '/template-parts/mdb-contact-page-content.php' );
@@ -1724,12 +1445,7 @@ function mdb_contact_page_content_output() {
 add_action('mdb_get_footer_content', 'mdb_footer_content_output');
 
 function mdb_footer_content_output() {
-
-        
         $footer_info = get_theme_mod('mdb_footer_info');
-        
-        
-        //print_r($mdb_review_posts);
         
         ob_start();
         require_once( get_template_directory() . '/template-parts/mdb-footer-content.php' );
@@ -1737,99 +1453,3 @@ function mdb_footer_content_output() {
         echo $output;
        
 }
-
-
-
-
-/*
-
-add_action('mdb_get_recent_reviews_page', 'mdb_reviews_page_output');
-
-function mdb_reviews_page_output() {
-    if(is_page('reviews')) {
-        class MDB_Movie {
-            public $id;
-            public $title;
-            public $rating;
-            public $summary;
-            public $published;
-            public $url;
-            public function __construct($id, $args) {
-                $this->id = $id;
-                $this->title = $args['title'];
-                $this->rating = $args['rating'];
-                $this->summary = $args['summary'];
-                $this->published = $args['published'];
-                $this->url = $args['url'];
-            } 
-        }
-        
-        $reviews = array();
-    
-        $paged = ( get_query_var('paged') ) ? get_query_var('paged') : 1;
-        
-        $mdb_reviews_query = new WP_Query( array( 'post_type' => 'mdb_review', 'order' => 'DESC', 'posts_per_page'=> 2, 'paged' => $paged) );
-        
-        $mdb_review_posts = $mdb_reviews_query->posts;
-        
-        $i = 0;
-        foreach($mdb_review_posts as $post) { 
-            
-            $post_id = $post->ID;
-            $this_review_permalink = esc_url(get_permalink($post));
-            $published = get_the_date('d.m.Y', $post_id);
-            
-            $summary = '';
-            $rating = 0;
-            if(in_array( 'movie_rating', get_post_custom_keys($post_id))) {
-                $rating = get_post_meta( $post_id, 'movie_rating', true);
-            }
-            
-            if(in_array( 'movie_summary', get_post_custom_keys($post_id))) {
-                $summary = get_post_meta( $post_id, 'movie_summary', true);
-            }
-            
-            
-            $args = array(
-                'title' => $post->post_title,
-                'rating' => $rating,
-                'summary' => $summary, 
-                'published' => $published,
-                'url' => $this_review_permalink
-            );
-            
-            
-            $this_review = new MDB_Movie($post_id, $args);
-            $reviews[$i] = $this_review;
-            $i++;
-        }
-        
-        
-    $mdb_reviews_pagination = paginate_links( array(
-        
-            'base'         => str_replace( 999999999, '%#%', esc_url( get_pagenum_link( 999999999 ) ) ),
-            'format'       => '/page/%#%',
-            'total'        => $mdb_reviews_query->max_num_pages,
-            'current'      => max( 1, $paged ),
-            'show_all'     => false,
-            'type'         => 'plain',
-            'end_size'     => 1,
-            'mid_size'     => 2,
-            'prev_next'    => true,
-            'prev_text'    => sprintf( '<i></i> %1$s', __( 'Newer Posts', 'moviedb' ) ),
-            'next_text'    => sprintf( '%1$s <i></i>', __( 'Older Posts', 'moviedb' ) ),
-            'add_args'     => false,
-            'add_fragment' => '',
-    ) );
-        
-    
-        ob_start();
-        require_once(get_template_directory() . '/template-parts/mdb-recent-reviews-page.php' );
-        $output = ob_get_clean();
-        echo $output;
-        wp_reset_postdata();
-        
-    }   
-}
-
-*/

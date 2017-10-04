@@ -76,8 +76,6 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 }
 
 
-
-
 * { 
     margin: 0;
 }
@@ -93,14 +91,6 @@ body {
     padding: 0; 
     margin: 0;
     background-color: rgb(18, 23, 63) !important;
-    /*
-    background-repeat-x: no-repeat;
-    background-repeat-y: no-repeat;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
-    */
 }
 
 #content #latest-reviews .review-link, 
@@ -222,13 +212,6 @@ body {
     overflow: hidden;
 }
 
-/*
-#site-nav .navbar-toggle:focus .icon-bar, #site-nav .navbar-toggle:hover .icon-bar {
-    background-color: cyan;
-    
-}
-*/
-
 #site-nav .navbar-header .navbar-toggle {
     background-color: rgba(0, 0, 0, 0.85);
 }
@@ -241,12 +224,6 @@ body {
 #site-nav .navbar-header .collapsed .icon-bar {
     background-color: #ff3d92;
 }
-
-/*
-#site-nav .navbar-header .navbar-toggle:hover .icon-bar, #site-nav .navbar-header .navbar-toggle:focus .icon-bar {
-    background-color: cyan;
-}
-*/
 
 #site-nav a, #site-nav #searchform input[type="text"] {
     font-size: 0.98em;
@@ -296,18 +273,6 @@ body {
     transition: width 0.65s;
 }
 
-/*
-#searchform input[type="text"]:focus { 
-    width: 500px;
-}
-*/
-
-/*
-#searchform .submit-clicked { 
-    width: 500px !important;
-}
-*/
-
 #search-submit {
     background-color: #f5aa21;
     margin: 1px;
@@ -344,17 +309,7 @@ body {
     margin: 15px 0;
 }
 
-/*
-#content.has-sidebar {
-    width: 68%;
-}
-*/
-
 #sidebar-primary {
-    /*
-    width: 30%;
-    float: right;
-    */
     padding: 2.5em 0;
 }
 
@@ -363,26 +318,11 @@ body {
     box-sizing: border-box;
 }
 
-
 .home-section, .review-list-item, .post-list-item, #sidebar-primary {
     position: relative;
     color: #eefffe;
     background-color: rgba(0, 0, 0, 0.48);
 }
-
-/*
-#sidebar-primary {
-    margin-top: 4em;
-}
-*/
-
-/*
-.widget-container .glsr-review {
-    border: 1px solid #ffc330;
-    margin: 1.25em 0.5em;
-    padding: 1em;
-}
-*/
 
 .widget-container ul {
     list-style: none;
@@ -466,7 +406,6 @@ body {
     border-color: aqua;
 }
 
-
 #latest-reviews {
     min-height: 800px;
     margin-right: 8.333%;
@@ -475,13 +414,6 @@ body {
 #reviews-wrapper {
     margin-top: 4em;
 }
-
-
-/*
-#latest-reviews .review-item img {
-    max-width: 200px;
-}
-*/
 
 #latest-reviews .review-item img {
     max-width: 100%;
@@ -514,15 +446,6 @@ body {
     text-decoration: none;
 }
 
-/*
-.review-link .review-thumb-wrapper {
-    position: relative;
-    display: block;
-    height: 75%;
-    width: auto;
-}
-*/
-
 .review-content .review-title {
     font-size: 9.35pt;
     line-height: 1.58;
@@ -532,7 +455,6 @@ body {
     position: relative;
     display: block;
     text-align: center;
-    /*height: 20%;*/
     min-height: 80px;
 }
 
@@ -540,15 +462,6 @@ body {
     position: relative;
     display: block;
 }
-
-/*
-.review-content-wrapper .review-footer {
-    position: relative;
-    display: block;
-    width: 100%;
-    height: 20px;
-}
-*/
 
 .review-item .review-content-wrapper .review-published {
     height: auto;
@@ -558,17 +471,6 @@ body {
     bottom: 0;
 }
 
-/*
-.review-published {
-    position: absolute;
-    bottom: 1.5em;
-    left: 0;
-    right: 0;
-    margin-left: auto;
-    margin-right: auto;
-}
-*/
-
 .review-item .review-published p {
     font-size: 9.25pt;
     margin: 0;
@@ -577,7 +479,6 @@ body {
 #review-list-wrapper .container, #post-list-wrapper .container, #content.container {
     width: 100%;
 }
-
 
 .review-list-item, .post-list-item {
     margin-bottom: 3.75em;
@@ -591,20 +492,6 @@ body {
     float: right;
     text-align: left;
 }
-
-
-
-/*
-.review-list-item .panel {
-    height: 380px;
-}
-
-
-.review-list-item .thumbnail {
-    height: 100%;
-    padding: 1.25em;
-}
-*/
 
 .review-list-item .review-link > .row, .post-list-item .post-link > .row {
     padding: 1.25em;
@@ -644,13 +531,6 @@ body {
     margin: 3em 0; 
 }
 
-/*
-.review-list-item-footer {
-    position: absolute;
-    bottom: 25px;
-}
-*/
-
 .single .content-area {
     position: relative;
     width: 100%;
@@ -669,12 +549,6 @@ body {
 .mdb_review .row:not(:last-of-type) {
     margin-bottom: 2em;
 }
-
-/*
-.single-mdb_review #single-review-title {
-  
-}
-*/
 
 #single-review-rating {
     padding-top: 5px;
@@ -698,12 +572,6 @@ body {
     padding: 3.5em 2.5em 3.5em 2.5em;
     border: 1px solid rgb(253, 61, 7);
 }
-
-/*
-.cover-image-container {
-    width: 300px;
-}
-*/
 
 .cover-image-container img {
     width: 100%;
@@ -773,16 +641,6 @@ body {
     max-width: 340px;
 }
 
-/*
-#single-review-content {
-    margin-top: 2em;
-    padding: 3em 4em;
-    background-color: rgba(255, 0, 239, 0.2);
-    color: #eefffe;
-    border: 1px solid #eefffe;
-}
-*/
-
 #single-review-content p {
     font-family: 'NunitoLight', sans-serif;
     font-size: 11.5pt;
@@ -812,7 +670,6 @@ body {
 .single #single-comments {
     padding: 4em;
     border: 1px solid rgb(253, 61, 7);
-    /*border-bottom: 0;*/
     margin-top: 2em;
 }
 
@@ -892,7 +749,6 @@ body {
 .glsr-field .btn:hover {
     border-color: aqua;
     color: aqua;
-    /* background-color: black; */
     background-color: #150529;
 }
 
@@ -903,7 +759,6 @@ body {
     padding: 2em;
     max-width: 760px;
 }
-
 
 #single-post-header {
     height: auto;
@@ -946,7 +801,6 @@ body {
     background-size: cover;
     padding: 0;
 }
-
 
 #single-content, #single-review-content {
     border-radius: 0;
@@ -1074,10 +928,6 @@ body {
     letter-spacing: 1pt;
 }
 
-
-
-
-
 #contact-form-wrapper .wpcf7-form {
     max-width: 500px;
 }
@@ -1086,8 +936,6 @@ body {
     color: #eefffe;
     margin-bottom: 10px;
 }
-
-
 
 #contact-form-wrapper .form-field-container input, 
 #contact-form-wrapper .form-field-container textarea {
@@ -1403,7 +1251,6 @@ body {
     #searchform {
         position: relative;
         padding: 0;
-        /*border-bottom: 1px solid #ffc330;*/
         border-top: 1px solid #ff1919;
         border-bottom: 1px solid #ff1919;
     }
@@ -1488,11 +1335,9 @@ body {
         padding: 1.75em 0.15em;
     }
     
-
     .review-list-item .thumbnail, .review-list-item .thumbnail img {
         margin: auto;
         width: 100%;
-        /*max-width: 480px;*/
     }
     
     .archive p, .search p {
@@ -1596,20 +1441,10 @@ body {
 /* ----- large screens ----- */
 
 
-
 @media screen and (min-width: 768px) { 
     
     #latest-reviews .review-item img {
         max-width: 340px;
     }
     
-}
-
-
-@media screen and (min-width: 1200px) {
-    /*
-    #latest-reviews .review-item img {
-        max-width: 200px;
-    }
-    */
 }

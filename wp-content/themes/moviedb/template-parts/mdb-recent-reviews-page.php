@@ -32,11 +32,5 @@ if(is_object($review)):
 <?php endif; $i++; $j++; endforeach; ?>        
 </div>
 <div class="pagination">
-    <?php 
-    //do_action('mdb_get_archive_pagination', $mdb_reviews_query); 
-    echo $mdb_reviews_pagination;
-    
-    
-    
-    ?>
+    <?php echo $mdb_reviews_pagination; ?>
 </div>

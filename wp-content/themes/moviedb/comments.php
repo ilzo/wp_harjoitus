@@ -43,14 +43,8 @@ if ( post_password_required() ) {
 
 	// If comments are closed and there are comments, let's leave a little note, shall we?
 	if ( ! comments_open() && get_comments_number() && post_type_supports( get_post_type(), 'comments' ) ) : ?>
-
 		<p class="no-comments"><?php _e( 'Comments are closed.', 'moviedb' ); ?></p>
-	<?php
-	endif;
-	//do_action('mdb_get_comment_form');
-    //ic_reviews();
-    //comment_form();
-    ?>
+	<?php endif; ?>
     <div class="row">
         <div id="review-summary-container" class="panel single-panel">
             <h3>User rating</h3>
